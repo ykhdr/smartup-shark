@@ -13,8 +13,10 @@ public class EnemyGenerator {
         enemyClasses.add(LongFish.class);
         enemyClasses.add(FatFish.class);
         enemyClasses.add(SmallFish.class);
+
     }
 
+    // TODO: 25.03.2023 подумать над расширяемостью
     public static Enemy generateRandomEnemy(double fieldWeight, double fieldHeight) {
         try {
             Class<? extends Enemy> enemyClass = enemyClasses.get(random.nextInt(enemyClasses.size()));
@@ -24,8 +26,8 @@ public class EnemyGenerator {
 
             double sizeScale = getSizeScale();
 
-            enemy.setWidth(enemy.getWidth()* sizeScale);
-            enemy.setHeight(enemy.getHeight()* sizeScale);
+            enemy.setWidth(enemy.getWidth() * sizeScale);
+            enemy.setHeight(enemy.getHeight() * sizeScale);
 
             enemy.setPhase(random.nextDouble(1));
             enemy.setSpeed(random.nextDouble(1, 3));
@@ -47,7 +49,8 @@ public class EnemyGenerator {
         return random.nextDouble(fieldHeight - 150) + 80;
     }
 
-    private static double getSizeScale(){
-        return random.nextDouble(1,2);
+
+    private static double getSizeScale() {
+        return random.nextDouble(1, 2);
     }
 }

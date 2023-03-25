@@ -6,6 +6,7 @@ public class Player extends Sprite{
     private final double defaultWeight;
     private final double defaultHeight;
 
+
     public Player(double x, double y, double w, double h, Color color) {
         super(x, y, w, h, color);
         this.defaultWeight = w;
@@ -13,8 +14,8 @@ public class Player extends Sprite{
     }
 
     public void reset(){
-        setWidth(defaultWeight);
-        setHeight(defaultHeight);
+        setWidth(30);
+        setHeight(15);
         dead = false;
     }
 }

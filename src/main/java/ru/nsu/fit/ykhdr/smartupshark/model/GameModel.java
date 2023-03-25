@@ -2,23 +2,33 @@ package ru.nsu.fit.ykhdr.smartupshark.model;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.sprtemodels.Enemy;
 import ru.nsu.fit.ykhdr.smartupshark.sprtemodels.EnemyGenerator;
 import ru.nsu.fit.ykhdr.smartupshark.sprtemodels.Player;
 import ru.nsu.fit.ykhdr.smartupshark.sprtemodels.Sprite;
 
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 
 public class GameModel {
 
     private final Pane gameField;
     private final AnchorPane endPane;
+    private final Label scoreLabel;
 
     private final Player player = new Player(500, 500, 30, 15, Color.BLUE);
+
+    private int score = 0;
 
     private double spawnTime = 0;
     private final AnimationTimer timer = new AnimationTimer() {
@@ -39,9 +49,11 @@ public class GameModel {
     private final double SPAWN_TIME = 0.5;
 
 
-    public GameModel(@NotNull Pane gameField, @NotNull AnchorPane endPane) {
+    public GameModel(@NotNull Pane gameField, @NotNull AnchorPane endPane,@NotNull Label scoreLabel ) {
         this.gameField = gameField;
         this.endPane = endPane;
+        this.scoreLabel = scoreLabel;
+
     }
 
     public void startGame() {
@@ -63,6 +75,7 @@ public class GameModel {
 
     private void resetGame() {
         player.reset();
+
     }
 
     private void spawnEnemy() {
@@ -84,6 +97,7 @@ public class GameModel {
                     s.setDead(true);
                     player.setWidth(player.getWidth() + PLAYER_SIZE_SCALE);
                     player.setHeight(player.getHeight() + PLAYER_SIZE_SCALE);
+                    score++;
                 } else {
                     player.setDead(true);
                 }
@@ -102,9 +116,10 @@ public class GameModel {
         if (player.isDead()) {
             gameField.getChildren().clear();
             timer.stop();
-
             endPane.setVisible(true);
             endPane.setManaged(true);
+            scoreLabel.setText("Score: " + score);
+            writeScore();
         }
 
         if (spawnTime > SPAWN_TIME) {
@@ -112,4 +127,21 @@ public class GameModel {
             spawnTime = 0;
         }
     }
+
+    private void writeScore() {
+        try (FileWriter writer = new FileWriter("src/main/resources/ru/nsu/fit/ykhdr/smartupshark/data/scores.csv",true)) {
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+            LocalDateTime now = LocalDateTime.now();
+            writer.write(dtf.format(now) + "," + score + "\n");
+
+            score = 0;
+        } catch (FileNotFoundException e) {
+            // TODO: 25.03.2023 create file
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
+
+

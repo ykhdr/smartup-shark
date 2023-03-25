@@ -26,11 +26,6 @@ public class ScoreboardModel {
                 }
             }
 
-            scoreDataList.add(new ScoreData("2023-03-21", 10));
-            scoreDataList.add(new ScoreData("2023-03-20", 20));
-            scoreDataList.add(new ScoreData("2023-03-19", 30));
-
-
             return scoreDataList;
         } catch (IOException e) {
             throw new RuntimeException(e);

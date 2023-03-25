@@ -7,10 +7,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import ru.nsu.fit.ykhdr.smartupshark.model.GameModel;
+import ru.nsu.fit.ykhdr.smartupshark.sprtemodels.Player;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,6 +35,10 @@ public class GameController implements Initializable {
 
     @FXML
     private AnchorPane endPane;
+    @FXML
+    private Label scoreLabel;
+    @FXML
+    private Player player = new Player(500, 500, 30, 15, Color.BLUE);
 
     private GameModel model;
 
@@ -63,7 +72,10 @@ public class GameController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        model = new GameModel(gameField, endPane);
+        model = new GameModel(gameField, endPane, scoreLabel);
+
+
+
 
         endPane.setVisible(false);
         endPane.setManaged(false);

@@ -1,3 +1,4 @@
-.sprite{
-    -fx-background-image: url("../models/shark.png");
+#player {
+    --fx-fill: url("../models/shark.png");
+
 }
