@@ -3,12 +3,9 @@ package ru.nsu.fit.ykhdr.smartupshark.model;
 import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.sprtemodels.Enemy;
 import ru.nsu.fit.ykhdr.smartupshark.sprtemodels.EnemyGenerator;
@@ -26,7 +23,7 @@ public class GameModel {
     private final AnchorPane endPane;
     private final Label scoreLabel;
 
-    private final Player player = new Player(500, 500, 30, 15, Color.BLUE);
+    private final Player player; // = new Player(500, 500, 30, 15, Color.BLUE);
 
     private int score = 0;
 
@@ -46,20 +43,24 @@ public class GameModel {
 
     private final double SPAWN_OFFSET = 100;
     private final double PLAYER_SIZE_SCALE = 0.75;
-    private final double SPAWN_TIME = 0.5;
+
+    private final double MAX_HEIGHT = 75.0;
+    private final double MAX_WEIGHT = 150.0;
 
 
-    public GameModel(@NotNull Pane gameField, @NotNull AnchorPane endPane,@NotNull Label scoreLabel ) {
+    public GameModel(@NotNull Pane gameField, @NotNull Player player, @NotNull AnchorPane endPane, @NotNull Label scoreLabel) {
         this.gameField = gameField;
         this.endPane = endPane;
         this.scoreLabel = scoreLabel;
-
+        this.player = player;
     }
 
     public void startGame() {
         resetGame();
 
-        gameField.getChildren().add(player);
+        if (!gameField.getChildren().contains(player)) {
+            gameField.getChildren().add(player);
+        }
 
         Scene scene = gameField.getScene();
         scene.setOnMouseMoved((MouseEvent event) -> {
@@ -75,7 +76,6 @@ public class GameModel {
 
     private void resetGame() {
         player.reset();
-
     }
 
     private void spawnEnemy() {
@@ -95,13 +95,14 @@ public class GameModel {
             if (s != player && s.getBoundsInParent().intersects(player.getBoundsInParent())) {
                 if (player.getWidth() * player.getHeight() > s.getWidth() * s.getHeight()) {
                     s.setDead(true);
-                    player.setWidth(player.getWidth() + PLAYER_SIZE_SCALE);
-                    player.setHeight(player.getHeight() + PLAYER_SIZE_SCALE);
                     score++;
+                    if (MAX_HEIGHT > player.getHeight() && MAX_WEIGHT > player.getWidth()) {
+                        player.setWidth(player.getWidth() + PLAYER_SIZE_SCALE);
+                        player.setHeight(player.getHeight() + PLAYER_SIZE_SCALE);
+                    }
                 } else {
                     player.setDead(true);
                 }
-                System.out.println("bad");
             }
         });
 
@@ -122,6 +123,7 @@ public class GameModel {
             writeScore();
         }
 
+        double SPAWN_TIME = 0.5;
         if (spawnTime > SPAWN_TIME) {
             spawnEnemy();
             spawnTime = 0;
@@ -129,7 +131,7 @@ public class GameModel {
     }
 
     private void writeScore() {
-        try (FileWriter writer = new FileWriter("src/main/resources/ru/nsu/fit/ykhdr/smartupshark/data/scores.csv",true)) {
+        try (FileWriter writer = new FileWriter("src/main/resources/ru/nsu/fit/ykhdr/smartupshark/data/scores.csv", true)) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             writer.write(dtf.format(now) + "," + score + "\n");

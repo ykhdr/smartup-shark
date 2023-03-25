@@ -10,7 +10,10 @@ public abstract class Enemy extends Sprite {
     private boolean rightDirection = true;
 
     public Enemy(double x, double y, double width, double height, Color color) {
-        super(x, y, width, height, color);
+        setX(x);
+        setY(y);
+        setWidth(width);
+        setHeight(height);
         setFill(color);
     }
 

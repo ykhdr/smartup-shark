@@ -7,35 +7,47 @@
 <?import javafx.scene.text.*?>
 
 <?import ru.nsu.fit.ykhdr.smartupshark.sprtemodels.Player?>
-<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nsu.fit.ykhdr.smartupshark.controller.GameController">
-    <ImageView fitHeight="736.0" fitWidth="1218.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+<StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+           prefHeight="720.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.14-internal"
+           xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nsu.fit.ykhdr.smartupshark.controller.GameController"
+           stylesheets="@../background/model.css">
+    <ImageView fitHeight="736.0" fitWidth="1218.0" pickOnBounds="true" preserveRatio="true"
+               StackPane.alignment="CENTER">
         <effect>
-            <GaussianBlur radius="1.0" />
+            <GaussianBlur radius="5.0"/>
         </effect>
-        <Image url="@../models/bg.jpg" />
+        <Image url="@../models/bg.jpg"/>
     </ImageView>
-    <Pane fx:id="gameField" maxHeight="720" maxWidth="1094.0" minHeight="720" minWidth="0" prefHeight="720.0" prefWidth="1094.0" stylesheets="@../background/model.css">
+    <Pane fx:id="gameField" maxHeight="720" maxWidth="1094.0" minHeight="720" minWidth="0" prefHeight="720.0"
+          prefWidth="1094.0" >
+        <Player fx:id="player" styleClass="player" width="30" height="15"/>
     </Pane>
 
 
     <AnchorPane fx:id="startPane" prefHeight="770.0" prefWidth="1062.0">
-        <Button alignment="CENTER" contentDisplay="CENTER" layoutX="431.0" layoutY="502.0" mnemonicParsing="false" onAction="#onActionBtnStart" prefHeight="116.0" prefWidth="162.0" style="-fx-background-color: #FF0000; -fx-text-fill: #FFFFFF; -fx-background-radius: 200;" text="Start">
+        <Button alignment="CENTER" contentDisplay="CENTER" layoutX="431.0" layoutY="502.0" mnemonicParsing="false"
+                onAction="#onActionBtnStart" prefHeight="116.0" prefWidth="162.0"
+                style="-fx-background-color: #FF0000; -fx-text-fill: #FFFFFF; -fx-background-radius: 200;" text="Start">
             <font>
-                <Font size="26.0" />
+                <Font size="26.0"/>
             </font>
         </Button>
     </AnchorPane>
     <AnchorPane fx:id="endPane" prefHeight="200.0" prefWidth="663.0">
-        <Button layoutX="457.0" layoutY="393.0" mnemonicParsing="false" onAction="#onActionBtnMenu" prefHeight="68.0" prefWidth="113.0" text="Menu" />
-        <Label alignment="CENTER" layoutX="386.0" layoutY="57.0" prefHeight="129.0" prefWidth="254.0" text="Game Over!" textAlignment="CENTER" textFill="RED">
+        <Button layoutX="457.0" layoutY="393.0" mnemonicParsing="false" onAction="#onActionBtnMenu" prefHeight="68.0"
+                prefWidth="113.0" text="Menu"/>
+        <Label alignment="CENTER" layoutX="386.0" layoutY="57.0" prefHeight="129.0" prefWidth="254.0" text="Game Over!"
+               textAlignment="CENTER" textFill="RED">
             <font>
-                <Font size="37.0" />
+                <Font size="37.0"/>
             </font>
         </Label>
-        <Button layoutX="457.0" layoutY="292.0" mnemonicParsing="false" onAction="#onActionNewGame" prefHeight="68.0" prefWidth="113.0" text="New Game" />
-        <Label fx:id="scoreLabel" alignment="CENTER" layoutX="374.0" layoutY="167.0" prefHeight="79.0" prefWidth="278.0" text="Score here" textFill="RED">
+        <Button layoutX="457.0" layoutY="292.0" mnemonicParsing="false" onAction="#onActionNewGame" prefHeight="68.0"
+                prefWidth="113.0" text="New Game"/>
+        <Label fx:id="scoreLabel" alignment="CENTER" layoutX="374.0" layoutY="167.0" prefHeight="79.0" prefWidth="278.0"
+               text="Score here" textFill="RED">
             <font>
-                <Font size="35.0" />
+                <Font size="35.0"/>
             </font>
         </Label>
     </AnchorPane>

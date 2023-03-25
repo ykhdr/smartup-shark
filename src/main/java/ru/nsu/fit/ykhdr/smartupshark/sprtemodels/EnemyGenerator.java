@@ -32,6 +32,8 @@ public class EnemyGenerator {
             enemy.setPhase(random.nextDouble(1));
             enemy.setSpeed(random.nextDouble(1, 3));
             enemy.setAmplitude(random.nextDouble(1));
+            enemy.setFrequency(random.nextDouble(0.4,0.5));
+
             if (enemy.getX() > 0) {
                 enemy.setRightDirection(false);
             }
