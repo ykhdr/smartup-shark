@@ -1,20 +1,20 @@
-package ru.nsu.fit.ykhdr.smartupshark.sprtemodels;
+package ru.nsu.fit.ykhdr.smartupshark.sprte;
 
 import javafx.scene.paint.Color;
+import org.jetbrains.annotations.NotNull;
 
-public abstract class Enemy extends Sprite {
+public abstract class HorizontalEnemy extends Sprite implements Enemy {
     private double amplitude = 1;
     private double frequency = 0.5;
     private double phase = 0;
     private double speed = 1.5;
-    private boolean rightDirection = true;
+    final Direction direction;
 
-    public Enemy(double x, double y, double width, double height, Color color) {
-        setX(x);
-        setY(y);
-        setWidth(width);
-        setHeight(height);
+    public HorizontalEnemy(double x, double y, double width, double height, @NotNull Color color, @NotNull Direction direction) {
+        super(x, y, width, height, color);
+
         setFill(color);
+        this.direction = direction;
     }
 
     public void setAmplitude(double amplitude) {
@@ -33,15 +33,13 @@ public abstract class Enemy extends Sprite {
         this.speed = speed;
     }
 
-    public void setRightDirection(boolean rightDirection) {
-        this.rightDirection = rightDirection;
-    }
+    abstract void setStyleId();
 
     public void layout() {
         double time = System.currentTimeMillis() / 1000.0; // current time in seconds
         double offset = amplitude * Math.sin(2 * Math.PI * frequency * time + phase);
 
         setTranslateY(getTranslateY() + speed * offset);
-        setTranslateX(rightDirection ? getTranslateX() + speed : getTranslateX() - speed);
+        setTranslateX(direction == Direction.RIGHT ? getTranslateX() + speed : getTranslateX() - speed);
     }
 }

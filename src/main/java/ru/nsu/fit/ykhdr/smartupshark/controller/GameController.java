@@ -12,7 +12,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import ru.nsu.fit.ykhdr.smartupshark.model.GameModel;
-import ru.nsu.fit.ykhdr.smartupshark.sprtemodels.Player;
+import ru.nsu.fit.ykhdr.smartupshark.sprte.Player;
 
 import java.io.IOException;
 import java.net.URL;

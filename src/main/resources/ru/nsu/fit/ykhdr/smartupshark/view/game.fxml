@@ -6,11 +6,11 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<?import ru.nsu.fit.ykhdr.smartupshark.sprtemodels.Player?>
+<?import ru.nsu.fit.ykhdr.smartupshark.sprte.Player?>
 <StackPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
            prefHeight="720.0" prefWidth="1024.0" xmlns="http://javafx.com/javafx/11.0.14-internal"
            xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nsu.fit.ykhdr.smartupshark.controller.GameController"
-           stylesheets="@../background/model.css">
+           >
     <ImageView fitHeight="736.0" fitWidth="1218.0" pickOnBounds="true" preserveRatio="true"
                StackPane.alignment="CENTER">
         <effect>
@@ -19,8 +19,8 @@
         <Image url="@../models/bg.jpg"/>
     </ImageView>
     <Pane fx:id="gameField" maxHeight="720" maxWidth="1094.0" minHeight="720" minWidth="0" prefHeight="720.0"
-          prefWidth="1094.0" >
-        <Player fx:id="player" styleClass="player" width="30" height="15"/>
+          prefWidth="1094.0" stylesheets="@../background/model.css" >
+        <Player fx:id="player" styleClass="player"  width="30" height="15"/>
     </Pane>
 
 

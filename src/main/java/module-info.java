@@ -13,11 +13,11 @@ module ru.nsu.fit.ykhdr.smartupshark {
     opens ru.nsu.fit.ykhdr.smartupshark to javafx.fxml;
     opens ru.nsu.fit.ykhdr.smartupshark.controller to javafx.fxml;
     opens ru.nsu.fit.ykhdr.smartupshark.model to javafx.fxml;
-    opens ru.nsu.fit.ykhdr.smartupshark.sprtemodels to javafx.fxml;
+    opens ru.nsu.fit.ykhdr.smartupshark.sprte to javafx.fxml;
 
     exports ru.nsu.fit.ykhdr.smartupshark ;
     exports ru.nsu.fit.ykhdr.smartupshark.controller;
     exports ru.nsu.fit.ykhdr.smartupshark.model;
-    exports ru.nsu.fit.ykhdr.smartupshark.sprtemodels;
+    exports ru.nsu.fit.ykhdr.smartupshark.sprte;
 
 }
