@@ -1,0 +1,30 @@
+/* Стиль для TableView */
+.table-view {
+  -fx-background-color: #fff;
+  -fx-padding: 10px;
+}
+
+/* Стиль для заголовков таблицы */
+.table-view .column-header {
+  -fx-alignment: CENTER;
+  -fx-background-color: #0072c6;
+  -fx-text-fill: #fff;
+  -fx-font-weight: bold;
+}
+
+/* Стиль для ячеек таблицы */
+.table-view .cell {
+  -fx-alignment: CENTER;
+  -fx-text-fill: #000;
+}
+
+.table-view .cell .text{
+  -fx-font-weight: bold;
+}
+
+/* Стиль для выделенных строк */
+.table-row-cell:selected {
+  -fx-background-color: #0072c6;
+  -fx-text-fill: #fff;
+}
+

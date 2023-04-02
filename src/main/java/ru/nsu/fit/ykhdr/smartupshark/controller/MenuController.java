@@ -24,16 +24,9 @@ public class MenuController implements Initializable {
     private Parent root;
 
     @FXML
-    public void onActionBtnGo(ActionEvent event) {
-        System.out.println("ha");
-    }
-
-    @FXML
     public void onActionBtnScoreboard(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/ru/nsu/fit/ykhdr/smartupshark/view/scoreboard.fxml"));
         root = loader.load();
-
-        //ScoreboardController scoreboardController = loader.getController();
 
         stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         scene = new Scene(root);
@@ -50,8 +43,13 @@ public class MenuController implements Initializable {
         stage.setScene(scene);
     }
 
+    @FXML
+    public void onActionBtnExit(){
+        System.exit(0);
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        label.getStyleClass().add("outline");
     }
 }

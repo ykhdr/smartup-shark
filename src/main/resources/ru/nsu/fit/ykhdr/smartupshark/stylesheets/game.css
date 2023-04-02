@@ -1,0 +1,11 @@
+.label{
+    -fx-font-size: 45px;
+    -fx-text-alignment: center;
+}
+
+.label .text{
+    -fx-fill: linear-gradient(to bottom, #0ddddd, #0000ff);
+    -fx-stroke: black;
+    -fx-stroke-width: 2px;
+    -fx-font-weight: bold;
+}

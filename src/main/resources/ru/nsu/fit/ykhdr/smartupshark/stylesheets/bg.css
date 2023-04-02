@@ -1,0 +1,6 @@
+.bg {
+    -fx-background-image: url("../models/bg.jpg");
+    -fx-background-position: center;
+    -fx-background-size: stretch;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);
+}

@@ -5,16 +5,16 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.sprte.HorizontalEnemy;
-import ru.nsu.fit.ykhdr.smartupshark.sprte.HorizontalEnemyFactory;
-import ru.nsu.fit.ykhdr.smartupshark.sprte.Player;
-import ru.nsu.fit.ykhdr.smartupshark.sprte.Sprite;
+import ru.nsu.fit.ykhdr.smartupshark.sprite.*;
+import ru.nsu.fit.ykhdr.smartupshark.sprite.EnemyFactory;
 
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -22,20 +22,23 @@ import java.time.format.DateTimeFormatter;
 public class GameModel {
 
     private final Pane gameField;
-    private final AnchorPane endPane;
-    private final Label scoreLabel;
+    private final VBox endBox;
+    private final Label finalScoreLabel;
+    private final Label curScoreLabel;
 
-    private final Player player; // = new Player(500, 500, 30, 15, Color.BLUE);
+
+    private final Player player = new Player();
 
     private int score = 0;
 
-    private double time = 0;
+    private double spawnTime = 0;
+    private double spawnIncreaseTime = 0;
     private final AnimationTimer timer = new AnimationTimer() {
         @Override
         public void handle(long now) {
             updateGameField();
             gameField.getChildren().forEach(s -> {
-                if (!(s instanceof HorizontalEnemy enemy)) {
+                if (!(s instanceof Enemy enemy)) {
                     return;
                 }
                 enemy.layout();
@@ -43,18 +46,13 @@ public class GameModel {
         }
     };
 
-    private final double SPAWN_OFFSET = 100;
-    private final double PLAYER_SIZE_SCALE = 0.75;
+    private double SPAWN_DELAY = 1;
 
-    private final double MAX_HEIGHT = 95.0;
-    private final double MAX_WEIGHT = 190.0;
-
-
-    public GameModel(@NotNull Pane gameField, @NotNull Player player, @NotNull AnchorPane endPane, @NotNull Label scoreLabel) {
+    public GameModel(@NotNull Pane gameField, @NotNull VBox endBox, @NotNull Label finalScoreLabel, @NotNull Label curScoreLabel) {
         this.gameField = gameField;
-        this.endPane = endPane;
-        this.scoreLabel = scoreLabel;
-        this.player = player;
+        this.endBox = endBox;
+        this.finalScoreLabel = finalScoreLabel;
+        this.curScoreLabel = curScoreLabel;
     }
 
     public void startGame() {
@@ -64,6 +62,8 @@ public class GameModel {
         scene.setOnMouseMoved((MouseEvent event) -> {
             double x = event.getX();
             double y = event.getY();
+
+            player.setId(x < player.getX() + player.getWidth() / 2 ? "player-left" : "player-right");
             player.setX(x - player.getWidth() / 2);
             player.setY(y - player.getHeight() / 2);
         });
@@ -80,55 +80,65 @@ public class GameModel {
         }
 
         player.setVisible(true);
+        gameField.setVisible(true);
     }
 
     private void spawnEnemy() {
-        HorizontalEnemy enemy = HorizontalEnemyFactory.getRandomEnemy(gameField.getWidth(), gameField.getHeight());
+        Enemy enemy = EnemyFactory.getRandomEnemy(gameField.getWidth(), gameField.getHeight(), player.size());
         gameField.getChildren().add(enemy);
     }
 
 
     private void updateGameField() {
-        time += 0.016;
+        spawnTime += 0.016;
+        spawnIncreaseTime += 0.016;
 
-        gameField.getChildren().forEach(this::checkCollision);
-
-        gameField.getChildren().removeIf(n -> {
-            Sprite s = (Sprite) n;
-            if (s.isDead()) {
-                return true;
-            }
-            return s.getTranslateX() > gameField.getWidth() + SPAWN_OFFSET || -s.getTranslateX() - SPAWN_OFFSET > gameField.getWidth();
-        });
+        gameField.getChildren().forEach(this::checkPlayerCollision);
+        gameField.getChildren().removeIf(this::checkFieldCollision);
 
         if (player.isDead()) {
-            gameField.getChildren().clear();
-            timer.stop();
-            endPane.setVisible(true);
-            endPane.setManaged(true);
-            scoreLabel.setText("Score: " + score);
-            writeScore();
+            endGame();
         }
 
-        double SPAWN_TIME = 0.5;
-        if (time > SPAWN_TIME) {
+        if (spawnTime > SPAWN_DELAY) {
             spawnEnemy();
-            time = 0;
+            spawnTime = 0;
+        }
+
+        if (spawnIncreaseTime > 10 && SPAWN_DELAY > 0.2) {
+            SPAWN_DELAY -= 0.05;
+            spawnIncreaseTime = 0;
         }
     }
 
-    private void checkCollision(@NotNull Node node) {
-        Sprite sprite = (Sprite) node;
+    private void endGame() {
+        gameField.getChildren().removeIf(s -> s instanceof Sprite);
+        gameField.setVisible(false);
+        timer.stop();
+        endBox.setVisible(true);
+        endBox.setManaged(true);
+        finalScoreLabel.setText(getScore());
+        writeScore();
+    }
 
-        if (sprite.isDead() || player.isDead()) {
+    private void checkPlayerCollision(@NotNull Node node) {
+        if (!(node instanceof Enemy enemy)) {
             return;
         }
 
-        if (sprite != player && sprite.getBoundsInParent().intersects(player.getBoundsInParent())) {
-            if (player.getWidth() * player.getHeight() > sprite.getWidth() * sprite.getHeight()) {
-                sprite.setDead(true);
+        if (enemy.isDead() || player.isDead()) {
+            return;
+        }
+
+        final double PLAYER_SIZE_SCALE = 1;
+        final double MAX_PLAYER_SIZE = 18050;
+
+        if (enemy.getBoundsInParent().intersects(player.getBoundsInParent())) {
+            if (enemy.isEatable()) {
+                enemy.setDead(true);
                 score++;
-                if (MAX_HEIGHT > player.getHeight() && MAX_WEIGHT > player.getWidth()) {
+                curScoreLabel.setText(getScore());
+                if (player.size() < MAX_PLAYER_SIZE) {
                     player.setWidth(player.getWidth() + PLAYER_SIZE_SCALE);
                     player.setHeight(player.getHeight() + PLAYER_SIZE_SCALE);
                 }
@@ -138,16 +148,52 @@ public class GameModel {
         }
     }
 
+    private boolean checkFieldCollision(@NotNull Node node) {
+        if (!(node instanceof Sprite sprite)) {
+            return false;
+        }
+
+        if (sprite.isDead()) {
+            return true;
+        }
+
+        final double SPAWN_OFFSET = 100;
+
+        double minX = gameField.getBoundsInParent().getMinX() - SPAWN_OFFSET;
+        double minY = gameField.getBoundsInParent().getMinY() - SPAWN_OFFSET;
+        double maxX = gameField.getBoundsInParent().getMaxX() + SPAWN_OFFSET;
+        double maxY = gameField.getBoundsInParent().getMaxY() + SPAWN_OFFSET;
+
+        return  sprite.getBoundsInParent().getMinX() > maxX ||
+                sprite.getBoundsInParent().getMaxX() < minX ||
+                sprite.getBoundsInParent().getMinY() > maxY ||
+                sprite.getBoundsInParent().getMaxY() < minY;
+    }
+
+    private @NotNull String getScore() {
+        return "Score : " + score;
+    }
+
     private void writeScore() {
-        try (FileWriter writer = new FileWriter("src/main/resources/ru/nsu/fit/ykhdr/smartupshark/data/scores.csv", true)) {
+        Path scoreboardPath = Path.of("src/main/resources/ru/nsu/fit/ykhdr/smartupshark/data/scores.csv");
+        if (!Files.exists(scoreboardPath)) {
+            createFile(scoreboardPath);
+        }
+
+        try (FileWriter writer = new FileWriter(scoreboardPath.toString(), true)) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             writer.write(dtf.format(now) + "," + score + "\n");
 
             score = 0;
-        } catch (FileNotFoundException e) {
-            // TODO: 25.03.2023 create file
+        } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void createFile(@NotNull Path path) {
+        try {
+            Files.createFile(path);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
