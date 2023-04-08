@@ -2,13 +2,14 @@
 .label {
     -fx-font-size: 70px;
     -fx-font-family: "Chilanka";
-    -fx-text-alignment: center;
+    -fx-alignment: CENTER;
 }
 
 .outline.label .text {
 
     -fx-fill: linear-gradient(to bottom, #0ddddd, #0000ff);
     -fx-stroke: black;
+    -fx-alignment: CENTER;
     -fx-stroke-width: 2px;
     -fx-font-weight: bold;
 }

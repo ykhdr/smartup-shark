@@ -13,7 +13,7 @@ public abstract class Sprite extends Rectangle {
         this.dead = dead;
     }
 
-    public boolean isDead() {
+    public boolean isDead(){
         return dead;
     }
 

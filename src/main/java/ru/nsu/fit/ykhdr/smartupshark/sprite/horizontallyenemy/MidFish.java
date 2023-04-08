@@ -9,15 +9,5 @@ public class MidFish extends MovingAlongSineWaveHorizontallyEnemy {
         setRandomY(fieldHeight);
         setEatable(size() < playerSize);
         setDirection(getX() < 0 ? Direction.RIGHT : Direction.LEFT);
-        setStyleId();
-    }
-
-    @Override
-    protected void setStyleId() {
-        if (isEatable()) {
-            setId(direction == Direction.LEFT ? "mid-fish-left-blue" : "mid-fish-right-blue");
-        } else {
-            setId(direction == Direction.LEFT ? "mid-fish-left-red" : "mid-fish-right-red");
-        }
     }
 }

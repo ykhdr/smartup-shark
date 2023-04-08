@@ -9,15 +9,5 @@ public class LongFish extends MovingAlongSineWaveHorizontallyEnemy {
         setRandomY(fieldHeight);
         setEatable(size() < playerSize);
         setDirection(getX() < 0 ? Direction.RIGHT : Direction.LEFT);
-        setStyleId();
-    }
-
-    @Override
-    protected void setStyleId() {
-        if (isEatable()) {
-            setId(direction == Direction.LEFT ? "long-fish-left-blue" : "long-fish-right-blue");
-        } else {
-            setId(direction == Direction.LEFT ? "long-fish-left-red" : "long-fish-right-red");
-        }
     }
 }

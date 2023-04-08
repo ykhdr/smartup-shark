@@ -18,11 +18,12 @@ ext {
     apacheCSVVersion = '1.10'
 }
 
-sourceCompatibility = '19'
-targetCompatibility = '19'
+sourceCompatibility = "19.PREVIEW"
+targetCompatibility = "19.PREVIEW"
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+    options.compilerArgs.add("--enable-preview")
 }
 
 application {
@@ -34,6 +35,8 @@ javafx {
     version = '19'
     modules = ['javafx.controls', 'javafx.fxml', 'javafx.media']
 }
+
+
 
 dependencies {
     implementation 'org.apache.commons:commons-csv:1.10.0'
@@ -47,7 +50,8 @@ dependencies {
     implementation('com.github.almasb:fxgl:17.2') {
         exclude(group: 'org.openjfx')
     }
-    //implementation 'se.eris:notnull-instrumenter-maven-plugin:1.1.1'
+
+    implementation 'org.jetbrains:annotations:24.0.0'
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
@@ -55,6 +59,10 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+run {
+    jvmArgs = ['--enable-preview']
 }
 
 jlink {

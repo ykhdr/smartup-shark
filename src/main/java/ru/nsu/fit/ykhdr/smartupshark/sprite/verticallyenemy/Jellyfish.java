@@ -7,13 +7,7 @@ public class Jellyfish extends MovingAlongSineWaveVerticallyEnemy {
         super(25 * sizeScale, 45 * sizeScale);
         setRandomX(fieldWeight);
         setRandomY(fieldHeight);
-        setEatable(size() * 2 < playerSize);
+        setEatable(false);
         setDirection(Direction.UP);
-        setStyleId();
-    }
-
-    @Override
-    protected void setStyleId() {
-        setId("jellyfish");
     }
 }

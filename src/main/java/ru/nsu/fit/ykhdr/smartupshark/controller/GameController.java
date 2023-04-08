@@ -1,78 +1,114 @@
 package ru.nsu.fit.ykhdr.smartupshark.controller;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
+import javafx.animation.AnimationTimer;
+import javafx.beans.binding.Bindings;
+import javafx.collections.ListChangeListener;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import javafx.scene.input.MouseEvent;
+import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.model.GameModel;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
-
-
-public class GameController implements Initializable {
-
-    @FXML
-    private Parent root;
-
-    @FXML
-    private Button startBtn;
-
-    @FXML
-    private VBox endBox;
-    @FXML
-    private Label finalScoreLabel;
-
-    @FXML
-    private Label curScoreLabel;
-
-    @FXML
-    private Pane gameField;
-
-    private GameModel model;
+import ru.nsu.fit.ykhdr.smartupshark.sprite.Direction;
+import ru.nsu.fit.ykhdr.smartupshark.sprite.Enemy;
+import ru.nsu.fit.ykhdr.smartupshark.view.GameView;
 
 
-    @FXML
-    public void onActionBtnStart() {
-        startBtn.setVisible(false);
-        startBtn.setManaged(false);
+public class GameController {
 
-        model.startGame();
+    private final @NotNull GameView view;
+    private final @NotNull GameModel model;
+
+    private final AnimationTimer timer;
+
+    public GameController(@NotNull Runnable backToMenuScene) {
+        this.view = new GameView();
+        this.model = new GameModel(view.getGameField().getPrefWidth(), view.getGameField().getPrefHeight());
+        this.timer = createTimer();
+
+        setupStartBox();
+        setupGameField();
+        setupEndBox(backToMenuScene);
+        setupGameLogic();
     }
 
-    @FXML
-    public void onActionBtnMenu(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ru/nsu/fit/ykhdr/smartupshark/view/menu.fxml"));
-        root = loader.load();
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
+    private void setupGameLogic() {
+        model.getGameOverProperty().addListener((observable, oldValue, newValue) -> {
+            if (oldValue == newValue) {
+                return;
+            }
+            if (newValue) {
+                timer.stop();
+                view.getGameField().removeSprite(model.getPlayer());
+                view.endGame();
+                model.endGame();
+            } else {
+                view.startGame();
+                model.resetGame();
+                timer.start();
+            }
+        });
     }
 
-    @FXML
-    public void onActionBtnNewGame() {
-        endBox.setVisible(false);
-        endBox.setManaged(false);
-
-        model.startGame();
+    private void setupStartBox() {
+        view.getStartBox().getStartBtn().setOnAction(event -> startGame());
     }
 
+    private void setupEndBox(@NotNull Runnable backToMenuScene) {
+        view.getEndBox().getBtnBackToMenu().setOnAction(event -> backToMenuScene.run());
+        view.getEndBox().getBtnNewGame().setOnAction(event -> startGame());
+        view.getEndBox().getScoreLabel().textProperty().bind(
+                Bindings.createStringBinding(() -> "Score: " + model.getScoreProperty().get(), model.getScoreProperty()));
+    }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        model = new GameModel(gameField, endBox, finalScoreLabel, curScoreLabel);
+    private void setupGameField() {
+        view.getGameField().getCurScoreLabel().textProperty().bind(
+                Bindings.createStringBinding(() -> "Score: " + model.getScoreProperty().get(), model.getScoreProperty()));
 
-        endBox.setVisible(false);
-        endBox.setManaged(false);
+        model.getEnemies().addListener((ListChangeListener<Enemy>) change -> {
+            while (change.next()) {
+                for (Enemy enemy : change.getAddedSubList()) {
+                    view.getGameField().addSprite(enemy);
+                    boolean leftDirection = enemy.getDirection() == Direction.LEFT;
+                    if (enemy.isEatable()) {
+                        view.getGameField().updateEatableEnemyView(enemy, leftDirection);
+                    } else {
+                        view.getGameField().updateNonEatableEnemyView(enemy, leftDirection);
+                    }
+                }
+                for (Enemy enemy : change.getRemoved()) {
+                    view.getGameField().removeSprite(enemy);
+                }
+            }
+        });
+    }
+
+    private @NotNull AnimationTimer createTimer() {
+        return new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                model.updateGame();
+            }
+        };
+    }
+
+    private void resetView() {
+        view.reset();
+    }
+
+    public @NotNull Scene getScene() {
+        resetView();
+        return view.getScene() == null ? new Scene(view) : view.getScene();
+    }
+
+    private void startGame() {
+        view.getScene().setOnMouseMoved((MouseEvent event) -> {
+            view.getGameField().updatePlayerStyle(model.getPlayer(), model.isPlayerDirectionLeft(event.getX()));
+            model.changePlayerCoordinates(event.getX(), event.getY());
+        });
+
+        view.getGameField().addSprite(model.getPlayer());
+
+        view.startGame();
+        model.resetGame();
+        timer.start();
     }
 }

@@ -2,11 +2,13 @@
     -fx-background-radius: 200;
     -fx-background-color:  linear-gradient(to bottom, cornflowerblue, deepskyblue);
     -fx-font-family: "Chilanka";
-    -fx-text-alignment: center;
+    -fx-alignment: CENTER;
     -fx-font-size: 19px;
+    -fx-padding: 0 10 0 10;
 }
 
 .button .text{
     -fx-fill: black;
     fx-font-weight: bold;
+    -fx-alignment: CENTER;
 }

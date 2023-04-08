@@ -9,15 +9,5 @@ public class SmallFish extends MovingAlongSineWaveHorizontallyEnemy {
         setRandomY(fieldHeight);
         setEatable(size() < playerSize);
         setDirection(getX() < 0 ? Direction.RIGHT : Direction.LEFT);
-        setStyleId();
-    }
-
-    @Override
-    protected void setStyleId() {
-        if (isEatable()) {
-            setId(direction == Direction.LEFT ? "small-fish-left-blue" : "small-fish-right-blue");
-        } else {
-            setId(direction == Direction.LEFT ? "small-fish-left-red" : "small-fish-right-red");
-        }
     }
 }

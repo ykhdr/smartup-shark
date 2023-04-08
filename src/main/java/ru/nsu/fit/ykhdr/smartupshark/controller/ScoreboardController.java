@@ -1,47 +1,45 @@
 package ru.nsu.fit.ykhdr.smartupshark.controller;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.stage.Stage;
-import ru.nsu.fit.ykhdr.smartupshark.model.ScoreData;
+import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.model.ScoreboardModel;
+import ru.nsu.fit.ykhdr.smartupshark.view.ScoreboardView;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+public class ScoreboardController {
 
-public class ScoreboardController implements Initializable {
+    private final @NotNull ScoreboardView view;
+    private final @NotNull ScoreboardModel model;
 
-    @FXML
-    private TableView<ScoreData> scoreboard;
+    public ScoreboardController(@NotNull Runnable backToMenuScene) {
+        this.model = new ScoreboardModel();
+        this.view = new ScoreboardView();
 
-    @FXML
-    private TableColumn<ScoreData, String> dateColumn;
-
-    @FXML
-    private TableColumn<ScoreData, Integer> scoreColumn;
-
-
-    @FXML
-    public void onActionBtnBack(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ru/nsu/fit/ykhdr/smartupshark/view/menu.fxml"));
-        Parent root = loader.load();
-
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
+        setupBackBtn(backToMenuScene);
+        setupScoreboardTable();
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        ScoreboardModel model = new ScoreboardModel();
-        scoreboard.getItems().addAll(model.getScoreDataObservableList());
+    private void setupBackBtn(@NotNull Runnable backToMenuScene){
+        view.getBackBtn().setOnAction(event -> backToMenuScene.run());
     }
 
+    private void setupScoreboardTable(){
+        view.getDateColumn().setCellValueFactory(data -> data.getValue().date());
+        view.getScoreColumn().setCellValueFactory(data -> data.getValue().score().asObject());
+        view.getScoreColumn().setSortType(TableColumn.SortType.DESCENDING);
+        view.getScoreColumn().setComparator(Integer::compareTo);
+        view.getScoreColumn().setSortable(true);
+        view.getScoreboardTable().getSortOrder().add(view.getScoreColumn());
+    }
+
+    private void resetScoreboardItems(){
+        view.getScoreboardTable().getItems().clear();
+        view.getScoreboardTable().getItems().addAll(model.loadScoreDataFromCsv());
+        view.getScoreboardTable().sort();
+    }
+
+    public @NotNull Scene getScene() {
+        resetScoreboardItems();
+        return view.getScene() == null ? new Scene(view) : view.getScene();
+    }
 }

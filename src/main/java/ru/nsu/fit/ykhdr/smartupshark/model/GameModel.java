@@ -1,107 +1,72 @@
 package ru.nsu.fit.ykhdr.smartupshark.model;
 
-import javafx.animation.AnimationTimer;
-import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.beans.property.*;
+import javafx.beans.value.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.sprite.*;
+import ru.nsu.fit.ykhdr.smartupshark.sprite.Enemy;
 import ru.nsu.fit.ykhdr.smartupshark.sprite.EnemyFactory;
+import ru.nsu.fit.ykhdr.smartupshark.sprite.Player;
 
-
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-
 public class GameModel {
+    private final @NotNull IntegerProperty score = new SimpleIntegerProperty(0);
+    private final @NotNull ObservableList<Enemy> enemies = FXCollections.observableArrayList();
+    private final @NotNull BooleanProperty gameOver = new SimpleBooleanProperty(false);
+    private final @NotNull Player player;
 
-    private final Pane gameField;
-    private final VBox endBox;
-    private final Label finalScoreLabel;
-    private final Label curScoreLabel;
-
-
-    private final Player player = new Player();
-
-    private int score = 0;
+    // TODO: 07.04.2023 create or use some structure for keep game field size
+    private final double gameFieldMaxX;
+    private final double gameFieldMaxY;
 
     private double spawnTime = 0;
     private double spawnIncreaseTime = 0;
-    private final AnimationTimer timer = new AnimationTimer() {
-        @Override
-        public void handle(long now) {
-            updateGameField();
-            gameField.getChildren().forEach(s -> {
-                if (!(s instanceof Enemy enemy)) {
-                    return;
-                }
-                enemy.layout();
-            });
-        }
-    };
 
     private double SPAWN_DELAY = 1;
 
-    public GameModel(@NotNull Pane gameField, @NotNull VBox endBox, @NotNull Label finalScoreLabel, @NotNull Label curScoreLabel) {
-        this.gameField = gameField;
-        this.endBox = endBox;
-        this.finalScoreLabel = finalScoreLabel;
-        this.curScoreLabel = curScoreLabel;
+    public GameModel(double gameFieldMaxX, double gameFieldMaxY) {
+        this.gameFieldMaxX = gameFieldMaxX;
+        this.gameFieldMaxY = gameFieldMaxY;
+
+        this.player = new Player();
     }
 
-    public void startGame() {
-        resetGame();
-
-        Scene scene = gameField.getScene();
-        scene.setOnMouseMoved((MouseEvent event) -> {
-            double x = event.getX();
-            double y = event.getY();
-
-            player.setId(x < player.getX() + player.getWidth() / 2 ? "player-left" : "player-right");
-            player.setX(x - player.getWidth() / 2);
-            player.setY(y - player.getHeight() / 2);
-        });
-
-
-        timer.start();
+    public @NotNull Player getPlayer() {
+        return player;
     }
 
-    private void resetGame() {
+    public void resetGame() {
         player.reset();
+        gameOver.set(false);
+        score.set(0);
 
-        if (!gameField.getChildren().contains(player)) {
-            gameField.getChildren().add(player);
-        }
-
-        player.setVisible(true);
-        gameField.setVisible(true);
+        SPAWN_DELAY = 1;
+        spawnTime = 0;
+        spawnIncreaseTime = 0;
     }
 
-    private void spawnEnemy() {
-        Enemy enemy = EnemyFactory.getRandomEnemy(gameField.getWidth(), gameField.getHeight(), player.size());
-        gameField.getChildren().add(enemy);
-    }
+    public void updateGame() {
+        enemies.forEach(Enemy::layout);
 
-
-    private void updateGameField() {
         spawnTime += 0.016;
         spawnIncreaseTime += 0.016;
 
-        gameField.getChildren().forEach(this::checkPlayerCollision);
-        gameField.getChildren().removeIf(this::checkFieldCollision);
+        enemies.removeIf(this::checkEnemyCollisionPlayer);
+        enemies.removeIf(this::checkEnemyOutOfBounds);
 
         if (player.isDead()) {
-            endGame();
+            gameOver.set(true);
         }
 
         if (spawnTime > SPAWN_DELAY) {
-            spawnEnemy();
+            enemies.add(spawnEnemy());
             spawnTime = 0;
         }
 
@@ -111,71 +76,13 @@ public class GameModel {
         }
     }
 
-    private void endGame() {
-        gameField.getChildren().removeIf(s -> s instanceof Sprite);
-        gameField.setVisible(false);
-        timer.stop();
-        endBox.setVisible(true);
-        endBox.setManaged(true);
-        finalScoreLabel.setText(getScore());
+    public void endGame() {
+        enemies.clear();
         writeScore();
     }
 
-    private void checkPlayerCollision(@NotNull Node node) {
-        if (!(node instanceof Enemy enemy)) {
-            return;
-        }
-
-        if (enemy.isDead() || player.isDead()) {
-            return;
-        }
-
-        final double PLAYER_SIZE_SCALE = 1;
-        final double MAX_PLAYER_SIZE = 18050;
-
-        if (enemy.getBoundsInParent().intersects(player.getBoundsInParent())) {
-            if (enemy.isEatable()) {
-                enemy.setDead(true);
-                score++;
-                curScoreLabel.setText(getScore());
-                if (player.size() < MAX_PLAYER_SIZE) {
-                    player.setWidth(player.getWidth() + PLAYER_SIZE_SCALE);
-                    player.setHeight(player.getHeight() + PLAYER_SIZE_SCALE);
-                }
-            } else {
-                player.setDead(true);
-            }
-        }
-    }
-
-    private boolean checkFieldCollision(@NotNull Node node) {
-        if (!(node instanceof Sprite sprite)) {
-            return false;
-        }
-
-        if (sprite.isDead()) {
-            return true;
-        }
-
-        final double SPAWN_OFFSET = 100;
-
-        double minX = gameField.getBoundsInParent().getMinX() - SPAWN_OFFSET;
-        double minY = gameField.getBoundsInParent().getMinY() - SPAWN_OFFSET;
-        double maxX = gameField.getBoundsInParent().getMaxX() + SPAWN_OFFSET;
-        double maxY = gameField.getBoundsInParent().getMaxY() + SPAWN_OFFSET;
-
-        return  sprite.getBoundsInParent().getMinX() > maxX ||
-                sprite.getBoundsInParent().getMaxX() < minX ||
-                sprite.getBoundsInParent().getMinY() > maxY ||
-                sprite.getBoundsInParent().getMaxY() < minY;
-    }
-
-    private @NotNull String getScore() {
-        return "Score : " + score;
-    }
-
-    private void writeScore() {
-        Path scoreboardPath = Path.of("src/main/resources/ru/nsu/fit/ykhdr/smartupshark/data/scores.csv");
+    private void writeScore(){
+        Path scoreboardPath = Path.of("src/main/resources/data/scores.csv");
         if (!Files.exists(scoreboardPath)) {
             createFile(scoreboardPath);
         }
@@ -183,9 +90,7 @@ public class GameModel {
         try (FileWriter writer = new FileWriter(scoreboardPath.toString(), true)) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
-            writer.write(dtf.format(now) + "," + score + "\n");
-
-            score = 0;
+            writer.write(dtf.format(now) + "," + score.get() + "\n");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -198,6 +103,63 @@ public class GameModel {
             throw new RuntimeException(e);
         }
     }
+
+
+    private boolean checkEnemyCollisionPlayer(@NotNull Enemy enemy) {
+        final double PLAYER_SIZE_SCALE = 1;
+        final double MAX_PLAYER_SIZE = 18050;
+
+        if (enemy.getBoundsInParent().intersects(player.getBoundsInParent())) {
+            if (enemy.isEatable()) {
+                enemy.setDead(true);
+                score.set(score.get() + 1);
+                if (player.size() < MAX_PLAYER_SIZE) {
+                    player.setWidth(player.getWidth() + PLAYER_SIZE_SCALE);
+                    player.setHeight(player.getHeight() + PLAYER_SIZE_SCALE);
+                }
+            } else {
+                player.setDead(true);
+            }
+        }
+        return enemy.isDead();
+    }
+
+    private boolean checkEnemyOutOfBounds(@NotNull Enemy enemy) {
+        final double SPAWN_OFFSET = 100;
+
+        double minX = 0 - SPAWN_OFFSET;
+        double minY = 0 - SPAWN_OFFSET;
+        double maxX = gameFieldMaxX + SPAWN_OFFSET;
+        double maxY = gameFieldMaxY + SPAWN_OFFSET;
+
+        return enemy.getBoundsInParent().getMinX() > maxX ||
+                enemy.getBoundsInParent().getMaxX() < minX ||
+                enemy.getBoundsInParent().getMinY() > maxY ||
+                enemy.getBoundsInParent().getMaxY() < minY;
+    }
+
+    public @NotNull Enemy spawnEnemy() {
+        return EnemyFactory.getRandomEnemy(1024, 720, player.size());
+    }
+
+    public void changePlayerCoordinates(double mouseX, double mouseY) {
+        player.setX(mouseX - player.getWidth() / 2);
+        player.setY(mouseY - player.getHeight() / 2);
+    }
+
+    public boolean isPlayerDirectionLeft(double mouseX){
+        return  mouseX < player.getX() + player.getWidth() / 2;
+    }
+
+    public @NotNull ObservableIntegerValue getScoreProperty() {
+        return score;
+    }
+
+    public @NotNull ObservableList<Enemy> getEnemies() {
+        return enemies;
+    }
+
+    public @NotNull ObservableBooleanValue getGameOverProperty() {
+        return gameOver;
+    }
 }
-
-

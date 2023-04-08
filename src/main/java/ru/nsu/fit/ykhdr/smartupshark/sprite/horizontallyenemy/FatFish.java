@@ -10,16 +10,5 @@ public class FatFish extends MovingAlongSineWaveHorizontallyEnemy {
         setRandomY(fieldHeight);
         setEatable(size() < playerSize);
         setDirection(getX() < 0 ? Direction.RIGHT : Direction.LEFT);
-        setStyleId();
     }
-
-    @Override
-    protected void setStyleId() {
-        if (isEatable()) {
-            setId(direction == Direction.LEFT ? "fat-fish-left-blue" : "fat-fish-right-blue");
-        } else {
-            setId(direction == Direction.LEFT ? "fat-fish-left-red" : "fat-fish-right-red");
-        }
-    }
-
 }

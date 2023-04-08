@@ -1,5 +1,7 @@
 package ru.nsu.fit.ykhdr.smartupshark.sprite;
 
+import org.jetbrains.annotations.NotNull;
+
 public abstract class Enemy extends Sprite {
 
     private boolean eatable = false;
@@ -21,8 +23,11 @@ public abstract class Enemy extends Sprite {
         return eatable;
     }
 
+    public @NotNull Direction getDirection() {
+        return direction;
+    }
+
     public abstract void layout();
 
-    protected abstract void setStyleId();
 }
 

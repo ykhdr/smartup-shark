@@ -1,55 +1,49 @@
 package ru.nsu.fit.ykhdr.smartupshark.controller;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.view.MenuView;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+public class MenuController implements Runnable{
+    private final MenuView view;
+    private final Stage stage;
 
-public class MenuController implements Initializable {
+    private final ScoreboardController scoreboardController;
+    private final GameController gameController;
 
-    @FXML
-    private Label label;
+    public MenuController(@NotNull Stage stage)  {
+        this.stage = stage;
+        this.scoreboardController = new ScoreboardController(this::setMenuScene);
+        this.gameController = new GameController(this::setMenuScene);
+        this.view = new MenuView();
 
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
-
-    @FXML
-    public void onActionBtnScoreboard(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ru/nsu/fit/ykhdr/smartupshark/view/scoreboard.fxml"));
-        root = loader.load();
-
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
+        setupButtons();
     }
 
-    @FXML
-    public void onActionBtnNewGame(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/ru/nsu/fit/ykhdr/smartupshark/view/game.fxml"));
-        root = loader.load();
-
-        stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        scene = new Scene(root);
-        stage.setScene(scene);
+    private void setupButtons(){
+        view.getNewGameBtn().setOnAction(event -> setGameScene());
+        view.getExitBtn().setOnAction(event -> System.exit(0));
+        view.getScoreboardBtn().setOnAction(event -> setScoreboardScene());
     }
 
-    @FXML
-    public void onActionBtnExit(){
-        System.exit(0);
+    private void setGameScene() {
+        stage.setScene(gameController.getScene());
+    }
+
+    private void setScoreboardScene() {
+        stage.setScene(scoreboardController.getScene());
+    }
+
+    private void setMenuScene() {
+        stage.setScene(view.getScene());
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        label.getStyleClass().add("outline");
+    public void run() {
+        stage.setScene(new Scene(view));
+        stage.setResizable(false);
+
+        stage.show();
     }
 }
