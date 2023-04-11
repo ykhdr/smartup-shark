@@ -10,8 +10,8 @@ public abstract class MovingAlongSineWaveEnemy extends Enemy{
 
     protected static final Random RANDOM = new Random();
 
-    public MovingAlongSineWaveEnemy(double width, double height) {
-        super(width, height);
+    public MovingAlongSineWaveEnemy(double x, double y,double width, double height) {
+        super(x,y,width, height);
         setRandomSineParams();
     }
     private void setRandomSineParams(){

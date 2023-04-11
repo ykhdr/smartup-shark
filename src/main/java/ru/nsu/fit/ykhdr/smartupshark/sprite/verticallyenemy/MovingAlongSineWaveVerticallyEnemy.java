@@ -3,8 +3,8 @@ package ru.nsu.fit.ykhdr.smartupshark.sprite.verticallyenemy;
 import ru.nsu.fit.ykhdr.smartupshark.sprite.MovingAlongSineWaveEnemy;
 
 public abstract class MovingAlongSineWaveVerticallyEnemy extends MovingAlongSineWaveEnemy {
-    public MovingAlongSineWaveVerticallyEnemy(double width, double height) {
-        super(width, height);
+    public MovingAlongSineWaveVerticallyEnemy(double x, double y,double width, double height) {
+        super(x,y,width, height);
     }
 
     @Override
@@ -16,11 +16,4 @@ public abstract class MovingAlongSineWaveVerticallyEnemy extends MovingAlongSine
         setTranslateY(getTranslateY() - speed);
     }
 
-    protected void setRandomX(double fieldWeight) {
-        setX(RANDOM.nextDouble(fieldWeight - 80) + 80);
-    }
-
-    protected void setRandomY(double fieldHeight) {
-        setY(fieldHeight);
-    }
 }

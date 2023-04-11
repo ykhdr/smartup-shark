@@ -5,8 +5,8 @@ import javafx.scene.shape.Rectangle;
 public abstract class Sprite extends Rectangle {
     boolean dead = false;
 
-    public Sprite(double width, double height) {
-        super(width, height);
+    public Sprite(double x, double y, double width, double height) {
+        super(x,y,width,height);
     }
 
     public void setDead(boolean dead) {

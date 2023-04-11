@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.model.GameModel;
-import ru.nsu.fit.ykhdr.smartupshark.sprite.Direction;
 import ru.nsu.fit.ykhdr.smartupshark.sprite.Enemy;
 import ru.nsu.fit.ykhdr.smartupshark.view.GameView;
 
@@ -67,16 +66,21 @@ public class GameController {
             while (change.next()) {
                 for (Enemy enemy : change.getAddedSubList()) {
                     view.getGameField().addSprite(enemy);
-                    boolean leftDirection = enemy.getDirection() == Direction.LEFT;
                     if (enemy.isEatable()) {
-                        view.getGameField().updateEatableEnemyView(enemy, leftDirection);
+                        view.getGameField().updateEatableEnemyView(enemy, model.isEnemyDirectionLeft(enemy));
                     } else {
-                        view.getGameField().updateNonEatableEnemyView(enemy, leftDirection);
+                        view.getGameField().updateNonEatableEnemyView(enemy, model.isEnemyDirectionLeft(enemy));
                     }
                 }
                 for (Enemy enemy : change.getRemoved()) {
                     view.getGameField().removeSprite(enemy);
                 }
+
+                change.getList().forEach(enemy -> {
+                    if(enemy.isEatable()){
+                        view.getGameField().updateEatableEnemyView(enemy, model.isEnemyDirectionLeft(enemy));
+                    }
+                });
             }
         });
     }
@@ -86,6 +90,7 @@ public class GameController {
             @Override
             public void handle(long now) {
                 model.updateGame();
+
             }
         };
     }

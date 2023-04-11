@@ -2,8 +2,8 @@ package ru.nsu.fit.ykhdr.smartupshark.sprite;
 
 public class Player extends Sprite {
 
-    public Player() {
-        super(30, 15);
+    public Player(double x, double y) {
+        super(x,y,30, 15);
     }
 
     public void reset() {

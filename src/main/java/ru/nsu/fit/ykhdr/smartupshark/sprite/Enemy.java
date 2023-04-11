@@ -6,17 +6,17 @@ public abstract class Enemy extends Sprite {
 
     private boolean eatable = false;
 
-    protected Direction direction;
+    protected @NotNull Direction direction = Direction.STAY_PUT;
 
-    public Enemy(double width, double height) {
-        super(width, height);
+    public Enemy(double x, double y,double width, double height) {
+        super(x,y,width, height);
     }
 
-    protected void setDirection(Direction direction) {
+    public void setDirection(@NotNull Direction direction) {
         this.direction = direction;
     }
 
-    protected void setEatable(boolean eatable){
+    public void setEatable(boolean eatable){
         this.eatable = eatable;
     }
     public boolean isEatable() {

@@ -5,9 +5,7 @@ import javafx.beans.value.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.sprite.Enemy;
-import ru.nsu.fit.ykhdr.smartupshark.sprite.EnemyFactory;
-import ru.nsu.fit.ykhdr.smartupshark.sprite.Player;
+import ru.nsu.fit.ykhdr.smartupshark.sprite.*;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -23,19 +21,19 @@ public class GameModel {
     private final @NotNull Player player;
 
     // TODO: 07.04.2023 create or use some structure for keep game field size
-    private final double gameFieldMaxX;
-    private final double gameFieldMaxY;
+    private final double fieldWight;
+    private final double fieldHeight;
 
     private double spawnTime = 0;
     private double spawnIncreaseTime = 0;
 
     private double SPAWN_DELAY = 1;
 
-    public GameModel(double gameFieldMaxX, double gameFieldMaxY) {
-        this.gameFieldMaxX = gameFieldMaxX;
-        this.gameFieldMaxY = gameFieldMaxY;
+    public GameModel(double fieldWight, double fieldHeight) {
+        this.fieldWight = fieldWight;
+        this.fieldHeight = fieldHeight;
 
-        this.player = new Player();
+        this.player = new Player(fieldWight / 2, fieldHeight / 2);
     }
 
     public @NotNull Player getPlayer() {
@@ -74,6 +72,12 @@ public class GameModel {
             SPAWN_DELAY -= 0.05;
             spawnIncreaseTime = 0;
         }
+
+        enemies.forEach(enemy -> {
+            if (enemy.size() < player.size()) {
+                enemy.setEatable(true);
+            }
+        });
     }
 
     public void endGame() {
@@ -81,7 +85,7 @@ public class GameModel {
         writeScore();
     }
 
-    private void writeScore(){
+    private void writeScore() {
         Path scoreboardPath = Path.of("src/main/resources/data/scores.csv");
         if (!Files.exists(scoreboardPath)) {
             createFile(scoreboardPath);
@@ -129,8 +133,8 @@ public class GameModel {
 
         double minX = 0 - SPAWN_OFFSET;
         double minY = 0 - SPAWN_OFFSET;
-        double maxX = gameFieldMaxX + SPAWN_OFFSET;
-        double maxY = gameFieldMaxY + SPAWN_OFFSET;
+        double maxX = fieldWight + SPAWN_OFFSET;
+        double maxY = fieldHeight + SPAWN_OFFSET;
 
         return enemy.getBoundsInParent().getMinX() > maxX ||
                 enemy.getBoundsInParent().getMaxX() < minX ||
@@ -138,8 +142,9 @@ public class GameModel {
                 enemy.getBoundsInParent().getMaxY() < minY;
     }
 
+
     public @NotNull Enemy spawnEnemy() {
-        return EnemyFactory.getRandomEnemy(1024, 720, player.size());
+        return RandomEnemyFactory.getRandomFactory().create(fieldWight, fieldHeight);
     }
 
     public void changePlayerCoordinates(double mouseX, double mouseY) {
@@ -147,8 +152,12 @@ public class GameModel {
         player.setY(mouseY - player.getHeight() / 2);
     }
 
-    public boolean isPlayerDirectionLeft(double mouseX){
-        return  mouseX < player.getX() + player.getWidth() / 2;
+    public boolean isEnemyDirectionLeft(@NotNull Enemy enemy){
+        return enemy.getDirection() == Direction.LEFT;
+    }
+
+    public boolean isPlayerDirectionLeft(double mouseX) {
+        return mouseX < player.getX() + player.getWidth() / 2;
     }
 
     public @NotNull ObservableIntegerValue getScoreProperty() {
