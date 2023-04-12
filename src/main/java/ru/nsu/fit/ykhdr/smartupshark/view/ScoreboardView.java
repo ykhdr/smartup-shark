@@ -12,10 +12,10 @@ import ru.nsu.fit.ykhdr.smartupshark.model.ScoreData;
 import java.util.Objects;
 
 public class ScoreboardView extends AnchorPane {
-    private final TableView<ScoreData> scoreboardTable = new TableView<>();
-    private final TableColumn<ScoreData, String> dateColumn = new TableColumn<>();
-    private final TableColumn<ScoreData, Integer> scoreColumn = new TableColumn<>();
-    private final Button backBtn = new Button();
+    private final @NotNull TableView<ScoreData> scoreboardTable = new TableView<>();
+    private final @NotNull TableColumn<ScoreData, String> dateColumn = new TableColumn<>();
+    private final @NotNull TableColumn<ScoreData, Integer> scoreColumn = new TableColumn<>();
+    private final @NotNull Button backBtn = new Button();
 
     public ScoreboardView() {
         configureView();

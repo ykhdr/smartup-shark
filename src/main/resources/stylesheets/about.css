@@ -1,15 +1,13 @@
 .label {
-    -fx-font-size: 70px;
+    -fx-font-size: 28px;
     -fx-font-family: "Chilanka";
     -fx-alignment: CENTER;
 }
 
 .label .text {
-    -fx-fill: linear-gradient(to bottom, #0ddddd, #0000ff);
+    -fx-fill: linear-gradient(to bottom, #ffffff, #0dd0ff);
     -fx-stroke: black;
     -fx-alignment: CENTER;
-    -fx-stroke-width: 2px;
+    -fx-stroke-width: 0px;
     -fx-font-weight: bold;
 }
-
-

@@ -1,9 +1,9 @@
 package ru.nsu.fit.ykhdr.smartupshark.sprite.verticallyenemy;
 
-import ru.nsu.fit.ykhdr.smartupshark.sprite.MovingAlongSineWaveEnemy;
+import ru.nsu.fit.ykhdr.smartupshark.sprite.SinusoidalEnemy;
 
-public abstract class MovingAlongSineWaveVerticallyEnemy extends MovingAlongSineWaveEnemy {
-    public MovingAlongSineWaveVerticallyEnemy(double x, double y,double width, double height) {
+public abstract class VerticalSinusoidalEnemy extends SinusoidalEnemy {
+    public VerticalSinusoidalEnemy(double x, double y, double width, double height) {
         super(x,y,width, height);
     }
 

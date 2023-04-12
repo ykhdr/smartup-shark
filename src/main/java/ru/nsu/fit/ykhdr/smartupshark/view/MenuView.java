@@ -10,25 +10,26 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Objects;
 
 public class MenuView extends VBox {
-    private final Label welcomeLabel = new Label();
-    private final Button newGameBtn = new Button();
-    private final Button scoreboardBtn = new Button();
-    private final Button exitBtn = new Button();
+    private final @NotNull Label welcomeLabel = new Label();
+    private final @NotNull Button newGameBtn = new Button();
+    private final @NotNull Button scoreboardBtn = new Button();
+    private final @NotNull Button aboutBtn = new Button();
+    private final @NotNull Button exitBtn = new Button();
 
-    private final Region upperRegion = new Region();
-    private final Region lowerRegion = new Region();
+    private final @NotNull Region upperRegion = new Region();
+    private final @NotNull Region lowerRegion = new Region();
 
     public MenuView() {
-
         configureView();
         configureWelcomeLabel();
         configureNewGameBtn();
         configureScoreboardBtn();
+        configureAboutBtn();
         configureExitBtn();
         configureUpperRegion();
         configureLowerRegion();
 
-        addStyleSheetsToView();
+        addStylesheets();
     }
 
     private void configureView() {
@@ -43,11 +44,12 @@ public class MenuView extends VBox {
         getChildren().add(upperRegion);
         getChildren().add(newGameBtn);
         getChildren().add(scoreboardBtn);
+        getChildren().add(aboutBtn);
         getChildren().add(exitBtn);
         getChildren().add(lowerRegion);
     }
 
-    private void addStyleSheetsToView() {
+    private void addStylesheets() {
         String bgStyle = Objects.requireNonNull(getClass().getResource("/stylesheets/bg.css")).toExternalForm();
         String btnStyle = Objects.requireNonNull(getClass().getResource("/stylesheets/button.css")).toExternalForm();
         String menuStyle = Objects.requireNonNull(getClass().getResource("/stylesheets/menu.css")).toExternalForm();
@@ -63,7 +65,6 @@ public class MenuView extends VBox {
         welcomeLabel.setText("Smartup Shark");
         welcomeLabel.setLayoutY(50);
         welcomeLabel.getStyleClass().add("label");
-        welcomeLabel.getStyleClass().add("outline");
     }
 
     private void configureNewGameBtn() {
@@ -78,13 +79,17 @@ public class MenuView extends VBox {
         scoreboardBtn.setText("Scoreboard");
     }
 
+    private void configureAboutBtn(){
+        aboutBtn.setPrefHeight(92);
+        aboutBtn.setPrefWidth(132);
+        aboutBtn.setText("About");
+    }
+
     private void configureExitBtn() {
         exitBtn.setAlignment(Pos.CENTER);
         exitBtn.setPrefHeight(92);
         exitBtn.setPrefWidth(132);
         exitBtn.setText("Exit");
-        exitBtn.getStyleClass().add("button");
-        exitBtn.getStyleClass().add("outline");
     }
 
     private void configureUpperRegion() {
@@ -92,7 +97,7 @@ public class MenuView extends VBox {
     }
 
     private void configureLowerRegion() {
-        lowerRegion.setPrefHeight(197);
+        lowerRegion.setPrefHeight(125);
     }
 
     public @NotNull Button getNewGameBtn(){
@@ -101,6 +106,10 @@ public class MenuView extends VBox {
 
     public @NotNull Button getScoreboardBtn() {
         return scoreboardBtn;
+    }
+
+    public @NotNull Button getAboutBtn() {
+        return aboutBtn;
     }
 
     public @NotNull Button getExitBtn() {

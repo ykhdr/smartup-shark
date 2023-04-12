@@ -24,7 +24,7 @@ import java.util.Objects;
 public class GameView extends AnchorPane {
 
     public static class GameField extends Pane {
-        private final Label curScoreLabel = new Label();
+        private final @NotNull Label curScoreLabel = new Label();
 
         public GameField() {
             setPrefHeight(720);
@@ -89,7 +89,7 @@ public class GameView extends AnchorPane {
     }
 
     public static class StartBox extends VBox {
-        private final Button startBtn = new Button();
+        private final @NotNull Button startBtn = new Button();
 
         public StartBox() {
             setAlignment(Pos.CENTER);
@@ -120,18 +120,17 @@ public class GameView extends AnchorPane {
     }
 
     public static class EndBox extends VBox {
-        private final Label endLabel = new Label();
-        private final Label scoreLabel = new Label();
-        private final Region offset = new Region();
-        private final Button newGameBtn = new Button();
-        private final Button backToMenuBtn = new Button();
+        private final @NotNull Label endLabel = new Label();
+        private final @NotNull Label scoreLabel = new Label();
+        private final @NotNull Region offset = new Region();
+        private final @NotNull Button newGameBtn = new Button();
+        private final @NotNull Button backToMenuBtn = new Button();
 
         public EndBox() {
             setAlignment(Pos.CENTER);
             setPrefHeight(720);
             setPrefWidth(1024);
             setSpacing(20);
-
 
             configureEndLabel();
             configureScoreLabel();
@@ -198,11 +197,9 @@ public class GameView extends AnchorPane {
         }
     }
 
-    private final GameField gameField;
-
-    private final StartBox startBox;
-
-    private final EndBox endBox;
+    private final @NotNull GameField gameField;
+    private final @NotNull StartBox startBox;
+    private final @NotNull EndBox endBox;
 
     public GameView() {
         gameField = new GameField();
@@ -270,7 +267,7 @@ public class GameView extends AnchorPane {
         return endBox;
     }
 
-    public GameField getGameField() {
+    public @NotNull GameField getGameField() {
         return gameField;
     }
 }

@@ -1,15 +1,15 @@
-package ru.nsu.fit.ykhdr.smartupshark.sprite;
+package ru.nsu.fit.ykhdr.smartupshark.sprite.verticallyenemy;
 
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.sprite.verticallyenemy.Jellyfish;
-import ru.nsu.fit.ykhdr.smartupshark.sprite.verticallyenemy.MovingAlongSineWaveVerticallyEnemy;
+import ru.nsu.fit.ykhdr.smartupshark.sprite.Direction;
+import ru.nsu.fit.ykhdr.smartupshark.sprite.EnemyFactory;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VerticalEnemyFactory extends EnemyFactory {
-    private static final @NotNull List<Class<? extends MovingAlongSineWaveVerticallyEnemy>> enemyClasses = new ArrayList<>();
+    private static final @NotNull List<Class<? extends VerticalSinusoidalEnemy>> enemyClasses = new ArrayList<>();
 
     private static final @NotNull VerticalEnemyFactory instance =  new VerticalEnemyFactory();
 
@@ -24,12 +24,12 @@ public class VerticalEnemyFactory extends EnemyFactory {
     }
 
     @Override
-    public @NotNull MovingAlongSineWaveVerticallyEnemy create(double fieldWeight, double fieldHeight) {
+    public @NotNull VerticalSinusoidalEnemy create(double fieldWeight, double fieldHeight) {
         try {
-            Class<? extends MovingAlongSineWaveVerticallyEnemy> enemyClass = enemyClasses.get(RANDOM.nextInt(enemyClasses.size()));
-            Constructor<? extends MovingAlongSineWaveVerticallyEnemy> constructor = enemyClass.getDeclaredConstructor(double.class, double.class, double.class);
+            Class<? extends VerticalSinusoidalEnemy> enemyClass = enemyClasses.get(RANDOM.nextInt(enemyClasses.size()));
+            Constructor<? extends VerticalSinusoidalEnemy> constructor = enemyClass.getDeclaredConstructor(double.class, double.class, double.class);
 
-            MovingAlongSineWaveVerticallyEnemy enemy = constructor.newInstance(getRandomX(fieldWeight), getRandomY(fieldHeight), getSizeScale());
+            VerticalSinusoidalEnemy enemy = constructor.newInstance(getRandomX(fieldWeight), getRandomY(fieldHeight), getSizeScale());
             enemy.setDirection(Direction.UP);
 
             return enemy;

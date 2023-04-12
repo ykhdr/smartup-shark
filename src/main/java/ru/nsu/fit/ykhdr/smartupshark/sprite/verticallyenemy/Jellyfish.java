@@ -1,6 +1,6 @@
 package ru.nsu.fit.ykhdr.smartupshark.sprite.verticallyenemy;
 
-public class Jellyfish extends MovingAlongSineWaveVerticallyEnemy {
+public class Jellyfish extends VerticalSinusoidalEnemy {
     public Jellyfish(double x, double y, double sizeScale) {
         super(x, y, 25 * sizeScale, 45 * sizeScale);
     }
