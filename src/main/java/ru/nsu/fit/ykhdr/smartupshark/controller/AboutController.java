@@ -13,11 +13,13 @@ public class AboutController {
         setupBackBtn(backToMenuScene);
     }
 
+    // CR: use custom interface instead of runnable
     private void setupBackBtn(@NotNull Runnable backToMenuScene){
         view.getBackBtn().setOnAction(event -> backToMenuScene.run());
     }
 
     public @NotNull Scene getScene(){
+        // CR: create view here (and store to field?)
         return view.getScene() == null ? new Scene(view) : view.getScene();
     }
 }

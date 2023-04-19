@@ -5,9 +5,10 @@ import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.view.MenuView;
 
+// CR: unify with another controllers: extract orchestration logic to a separate class
 public class MenuController implements Runnable{
     private final @NotNull MenuView view;
-    private final @NotNull  Stage stage;
+    private final @NotNull Stage stage;
 
     private final @NotNull ScoreboardController scoreboardController;
     private final @NotNull GameController gameController;

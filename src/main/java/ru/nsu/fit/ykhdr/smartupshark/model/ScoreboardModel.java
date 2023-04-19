@@ -15,8 +15,11 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+// CR: load scores from file only once when needed
+// CR: update scores in file only on exit (otherwise update in memory)
 public class ScoreboardModel {
     private final Path CSV_PATH = Path.of("src/main/resources/data/scores.csv");
+    // CR: just regular list
     private final ObservableList<ScoreData> scoreDataList = FXCollections.observableArrayList();
 
     public @NotNull ObservableList<ScoreData> loadScoreDataFromCsv() {

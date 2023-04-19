@@ -24,6 +24,7 @@ public class ScoreboardController {
     }
 
     private void setupScoreboardTable(){
+        // CR: move to view
         view.getDateColumn().setCellValueFactory(data -> data.getValue().date());
         view.getScoreColumn().setCellValueFactory(data -> data.getValue().score().asObject());
         view.getScoreColumn().setSortType(TableColumn.SortType.DESCENDING);
@@ -34,6 +35,7 @@ public class ScoreboardController {
 
     private void resetScoreboardItems(){
         view.getScoreboardTable().getItems().clear();
+        // CR: separate method to add data
         view.getScoreboardTable().getItems().addAll(model.loadScoreDataFromCsv());
         view.getScoreboardTable().sort();
     }

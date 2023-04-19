@@ -3,6 +3,7 @@ package ru.nsu.fit.ykhdr.smartupshark.sprite.horizontallyenemy;
 import ru.nsu.fit.ykhdr.smartupshark.sprite.Direction;
 import ru.nsu.fit.ykhdr.smartupshark.sprite.SinusoidalEnemy;
 
+// CR: add strategies instead of inheritance
 public abstract class HorizontalSinusoidalEnemy extends SinusoidalEnemy {
     public HorizontalSinusoidalEnemy(double x, double y, double width, double height) {
         super(x,y,width, height);

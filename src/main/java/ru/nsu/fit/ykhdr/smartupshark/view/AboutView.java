@@ -48,6 +48,7 @@ public class AboutView extends VBox {
         aboutLabel.setPrefHeight(500);
         aboutLabel.getStyleClass().add("label");
 
+        // CR: load from file
         aboutLabel.setText("""
                                 This game allows you to dive into the underwater world
                                     and experience the life of a dangerous shark.

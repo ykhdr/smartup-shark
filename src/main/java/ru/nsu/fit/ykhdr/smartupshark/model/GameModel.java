@@ -14,6 +14,79 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+//import java.util.Timer;
+//
+//class Player1 {
+//
+//    private int x;
+//    private int y;
+//    private boolean isDead;
+//    private int width;
+//    private int height;
+//
+//
+//
+//}
+//
+//class Field {
+//
+//    List<Fish> enemies;
+//    Player1 player1;
+//
+//    private final int width;
+//    private final int height;
+//
+//    int score;
+//
+//    public boolean gameOver() {
+//        return player1.isDead();
+//    }
+//
+//    public void update() {
+//        player1.move();
+//        // ....
+//    }
+//
+//    public GameObjects getGameData() {
+//        new PlayerObject(player1.x, player1.y, ....) {}
+//    }
+//
+//}
+//
+//
+//class Controller {
+//
+//    Field field;
+//
+//    Timer timer = () -> update();
+//
+//    void update() {
+//        field.update();
+//        if (field.gameOver()) {
+//            view.showGameOver();
+//        }
+//        else {
+//            view.update(field.getGameData());
+//        }
+//    }
+//}
+//
+//class View {
+//    GameObjects gameObjects;
+//
+//    public void update(GameObjects gameObjects) {
+//        this.gameObjects = gameObjects;
+//    }
+//
+//    repaint() {
+//        for (GameObject : gameObjects) {
+//
+//        }
+//    }
+//}
+//
+//record PlayerObject(int x, int y, int width, int height, boolean isDead) {}
+
 public class GameModel {
     private final @NotNull IntegerProperty score = new SimpleIntegerProperty(0);
     private final @NotNull ObservableList<Enemy> enemies = FXCollections.observableArrayList();
@@ -68,6 +141,7 @@ public class GameModel {
             spawnTime = 0;
         }
 
+        // CR: move spawn logic to separate class
         if (spawnIncreaseTime > 10 && SPAWN_DELAY > 0.2) {
             SPAWN_DELAY -= 0.05;
             spawnIncreaseTime = 0;
