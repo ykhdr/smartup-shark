@@ -48,7 +48,7 @@ public class SceneManager {
 
     public void show(){
         setMenuScene();
-//        stage.setResizable(false);
+        stage.setResizable(false);
         stage.show();
     }
 }
