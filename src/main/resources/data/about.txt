@@ -1,0 +1,9 @@
+This game allows you to dive into the underwater world
+and experience the life of a dangerous shark.
+You will have to survive in this harsh world among thousands of predators
+
+The shark is controlled by the cursor.
+You can eat fish with a blue outline.
+Each fish you eat gives you a point and makes your shark bigger.
+The bigger your shark is, the more blue-rimmed fish you will encounter.
+Beware of jellyfish, you can't eat them!

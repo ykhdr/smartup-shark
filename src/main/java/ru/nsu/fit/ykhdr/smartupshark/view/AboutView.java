@@ -1,9 +1,12 @@
 package ru.nsu.fit.ykhdr.smartupshark.view;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.TextAlignment;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.model.SceneSize;
 
@@ -16,23 +19,21 @@ public class AboutView extends VBox implements View {
 
     @Override
     public void setup(@NotNull SceneSize size) {
-        configureView();
-
-        configureLabel();
-        configureBackBtn();
-        addStylesheets();
-
-    }
-
-    private void configureView() {
         setPrefHeight(720);
         setPrefWidth(1024);
         setAlignment(Pos.CENTER);
 
-        getStyleClass().add("bg");
+        configureViewComponents();
+        addStylesheets();
 
+        getStyleClass().add("bg");
         getChildren().add(aboutLabel);
         getChildren().add(backBtn);
+    }
+
+    private void configureViewComponents() {
+        configureLabel();
+        configureBackBtn();
     }
 
     private void addStylesheets(){
@@ -49,18 +50,7 @@ public class AboutView extends VBox implements View {
         aboutLabel.setPrefWidth(1000);
         aboutLabel.setPrefHeight(500);
         aboutLabel.getStyleClass().add("label");
-
-        // CR: load from file
-        aboutLabel.setText("""
-                                This game allows you to dive into the underwater world
-                                    and experience the life of a dangerous shark.
-                You will have to survive in this harsh world among thousands of predators
-                
-                The shark is controlled by the cursor. You can eat fish with a blue outline.
-                        Each fish you eat gives you a point and makes your shark bigger.
-                   The bigger your shark is, the more blue-rimmed fish you will encounter.
-                                            Beware of jellyfish, you can't eat them!
-                """);
+        aboutLabel.setTextAlignment(TextAlignment.CENTER);
     }
 
     private void configureBackBtn() {
@@ -69,8 +59,11 @@ public class AboutView extends VBox implements View {
         backBtn.setText("Menu");
     }
 
-    public @NotNull Button getBackBtn(){
-        return backBtn;
+    public void setActionOnBtnBackToMenu(@NotNull EventHandler<ActionEvent> action){
+        backBtn.setOnAction(action);
     }
 
+    public void setText(@NotNull String text){
+        aboutLabel.setText(text);
+    }
 }

@@ -18,12 +18,9 @@ public class AboutController implements Controller {
         this.model = new AboutModel();
     }
 
-    private void setupBackBtn() {
-        view.getBackBtn().setOnAction(event -> sceneManager.setMenuScene());
-    }
-
     private void setupViewDependencies() {
-        setupBackBtn();
+        view.setActionOnBtnBackToMenu(event -> sceneManager.setMenuScene());
+        view.setText(model.getAboutText());
     }
 
 

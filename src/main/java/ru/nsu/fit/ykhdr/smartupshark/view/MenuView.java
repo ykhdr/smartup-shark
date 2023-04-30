@@ -1,52 +1,55 @@
 package ru.nsu.fit.ykhdr.smartupshark.view;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.model.SceneSize;
 
 import java.util.Objects;
 
-public class MenuView extends VBox {
+public class MenuView extends VBox implements View {
     private final @NotNull Label welcomeLabel = new Label();
     private final @NotNull Button newGameBtn = new Button();
     private final @NotNull Button scoreboardBtn = new Button();
     private final @NotNull Button aboutBtn = new Button();
     private final @NotNull Button exitBtn = new Button();
 
-    private final @NotNull Region upperRegion = new Region();
-    private final @NotNull Region lowerRegion = new Region();
+    private final @NotNull Region upperMargin = new Region();
+    private final @NotNull Region lowerMargin = new Region();
 
-    public MenuView() {
-        configureView();
+    @Override
+    public void setup(@NotNull SceneSize size) {
+        setPrefWidth(size.width());
+        setPrefHeight(size.height());
+        setAlignment(Pos.CENTER);
+        setSpacing(20);
+
+        configureViewComponents();
+        addStylesheets();
+
+        getStyleClass().add("bg");
+        getChildren().add(welcomeLabel);
+        getChildren().add(upperMargin);
+        getChildren().add(newGameBtn);
+        getChildren().add(scoreboardBtn);
+        getChildren().add(aboutBtn);
+        getChildren().add(exitBtn);
+        getChildren().add(lowerMargin);
+    }
+
+    private void configureViewComponents() {
         configureWelcomeLabel();
         configureNewGameBtn();
         configureScoreboardBtn();
         configureAboutBtn();
         configureExitBtn();
-        configureUpperRegion();
-        configureLowerRegion();
-
-        addStylesheets();
-    }
-
-    private void configureView() {
-        setAlignment(Pos.CENTER);
-        setPrefHeight(720);
-        setPrefWidth(1024);
-        setSpacing(20);
-
-        getStyleClass().add("bg");
-
-        getChildren().add(welcomeLabel);
-        getChildren().add(upperRegion);
-        getChildren().add(newGameBtn);
-        getChildren().add(scoreboardBtn);
-        getChildren().add(aboutBtn);
-        getChildren().add(exitBtn);
-        getChildren().add(lowerRegion);
+        configureUpperMargin();
+        configureLowerMargin();
     }
 
     private void addStylesheets() {
@@ -54,9 +57,9 @@ public class MenuView extends VBox {
         String btnStyle = Objects.requireNonNull(getClass().getResource("/stylesheets/button.css")).toExternalForm();
         String menuStyle = Objects.requireNonNull(getClass().getResource("/stylesheets/menu.css")).toExternalForm();
 
-       getStylesheets().add(bgStyle);
-       getStylesheets().add(btnStyle);
-       getStylesheets().add(menuStyle);
+        getStylesheets().add(bgStyle);
+        getStylesheets().add(btnStyle);
+        getStylesheets().add(menuStyle);
     }
 
 
@@ -79,7 +82,7 @@ public class MenuView extends VBox {
         scoreboardBtn.setText("Scoreboard");
     }
 
-    private void configureAboutBtn(){
+    private void configureAboutBtn() {
         aboutBtn.setPrefHeight(92);
         aboutBtn.setPrefWidth(132);
         aboutBtn.setText("About");
@@ -92,27 +95,27 @@ public class MenuView extends VBox {
         exitBtn.setText("Exit");
     }
 
-    private void configureUpperRegion() {
-        upperRegion.setPrefHeight(95);
+    private void configureUpperMargin() {
+        upperMargin.setPrefHeight(95);
     }
 
-    private void configureLowerRegion() {
-        lowerRegion.setPrefHeight(125);
+    private void configureLowerMargin() {
+        lowerMargin.setPrefHeight(125);
     }
 
-    public @NotNull Button getNewGameBtn(){
-        return newGameBtn;
+    public void setActionOnBtnNewGame(@NotNull EventHandler<ActionEvent> action) {
+        newGameBtn.setOnAction(action);
     }
 
-    public @NotNull Button getScoreboardBtn() {
-        return scoreboardBtn;
+    public void setActionOnBtnScoreboard(@NotNull EventHandler<ActionEvent> action) {
+        scoreboardBtn.setOnAction(action);
     }
 
-    public @NotNull Button getAboutBtn() {
-        return aboutBtn;
+    public void setActionOnBtnAbout(@NotNull EventHandler<ActionEvent> action) {
+        aboutBtn.setOnAction(action);
     }
 
-    public @NotNull Button getExitBtn() {
-        return exitBtn;
+    public void setActionOnBtnExit(@NotNull EventHandler<ActionEvent> action) {
+        exitBtn.setOnAction(action);
     }
 }
