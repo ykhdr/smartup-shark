@@ -37,16 +37,11 @@ public class GameView extends StackPane implements View {
         startBox.setup(size);
         endBox.setup(size);
 
-        configureView();
         addStylesheets();
 
+        getStyleClass().add("bg");
         getChildren().add(gameField);
         getChildren().add(startBox);
-    }
-
-
-    private void configureView() {
-        getStyleClass().add("bg");
     }
 
     private void addStylesheets() {

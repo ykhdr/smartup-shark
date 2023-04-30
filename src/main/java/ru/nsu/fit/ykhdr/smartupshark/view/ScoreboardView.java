@@ -1,5 +1,10 @@
 package ru.nsu.fit.ykhdr.smartupshark.view;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
@@ -7,34 +12,37 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.model.SceneSize;
 import ru.nsu.fit.ykhdr.smartupshark.model.ScoreData;
 
+import java.util.List;
 import java.util.Objects;
 
-public class ScoreboardView extends AnchorPane {
+public class ScoreboardView extends AnchorPane implements View {
     private final @NotNull TableView<ScoreData> scoreboardTable = new TableView<>();
     private final @NotNull TableColumn<ScoreData, String> dateColumn = new TableColumn<>();
     private final @NotNull TableColumn<ScoreData, Integer> scoreColumn = new TableColumn<>();
     private final @NotNull Button backBtn = new Button();
 
-    public ScoreboardView() {
-        configureView();
+    @Override
+    public void setup(@NotNull SceneSize size) {
+        setPrefWidth(size.width());
+        setPrefHeight(size.height());
+
+        configureViewComponents();
+
+        addStyleSheets();
+
+        getStyleClass().add("bg");
+        getChildren().add(scoreboardTable);
+        getChildren().add(backBtn);
+    }
+
+    private void configureViewComponents() {
         configureScoreboard();
         configureDateColumn();
         configureScoreColumn();
         configureBackBtn();
-
-        addStyleSheets();
-    }
-
-    private void configureView() {
-        setPrefHeight(720);
-        setPrefWidth(1024);
-
-        getStyleClass().add("bg");
-
-        getChildren().add(scoreboardTable);
-        getChildren().add(backBtn);
     }
 
     private void configureScoreboard() {
@@ -46,11 +54,15 @@ public class ScoreboardView extends AnchorPane {
 
         scoreboardTable.getColumns().add(dateColumn);
         scoreboardTable.getColumns().add(scoreColumn);
+
+        scoreboardTable.getSortOrder().add(scoreColumn);
     }
 
     private void configureDateColumn() {
         dateColumn.setPrefWidth(350);
         dateColumn.setText("Date");
+
+        dateColumn.setCellValueFactory(data -> convertStringToObservable(data.getValue().date()));
 
         dateColumn.setCellFactory(tc -> new TableCell<>() {
             @Override
@@ -70,6 +82,13 @@ public class ScoreboardView extends AnchorPane {
     private void configureScoreColumn() {
         scoreColumn.setPrefWidth(350);
         scoreColumn.setText("Score");
+
+        scoreColumn.setSortType(TableColumn.SortType.DESCENDING);
+        scoreColumn.setComparator(Integer::compareTo);
+        scoreColumn.setSortable(true);
+
+        scoreColumn.setCellValueFactory(data -> convertIntegerToObservable(data.getValue().score()));
+
         scoreColumn.setCellFactory(tc -> new TableCell<>() {
             @Override
             protected void updateItem(Integer item, boolean empty) {
@@ -104,19 +123,21 @@ public class ScoreboardView extends AnchorPane {
         getStylesheets().add(scoreboardStyle);
     }
 
-    public @NotNull Button getBackBtn() {
-        return backBtn;
+    private @NotNull ObservableValue<String> convertStringToObservable(@NotNull String string){
+        return new SimpleStringProperty(string);
     }
 
-    public @NotNull TableView<ScoreData> getScoreboardTable() {
-        return scoreboardTable;
+    private @NotNull ObservableValue<Integer> convertIntegerToObservable(@NotNull Integer integer){
+        return new SimpleIntegerProperty(integer).asObject();
     }
 
-    public @NotNull TableColumn<ScoreData, String> getDateColumn() {
-        return dateColumn;
+    public void setActionOnBtnBackToMenu(@NotNull EventHandler<ActionEvent> action) {
+        backBtn.setOnAction(action);
     }
 
-    public @NotNull TableColumn<ScoreData, Integer> getScoreColumn() {
-        return scoreColumn;
+    public void setItems(@NotNull List<ScoreData> scoreDataList){
+        scoreboardTable.getItems().clear();
+        scoreboardTable.getItems().addAll(scoreDataList);
+        scoreboardTable.sort();
     }
 }

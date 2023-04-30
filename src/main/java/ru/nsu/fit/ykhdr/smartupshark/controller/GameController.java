@@ -17,7 +17,7 @@ public class GameController implements Controller {
 
     private final @NotNull AnimationTimer timer;
 
-    private boolean isGameSetup = false;
+    private boolean isSetup = false;
 
     public GameController(@NotNull SceneManager sceneManager) {
         this.sceneManager = sceneManager;
@@ -73,11 +73,11 @@ public class GameController implements Controller {
 
     @Override
     public @NotNull Scene getScene() {
-        if (!isGameSetup) {
+        if (!isSetup) {
             view.setup(model.getSceneSize());
 
             setupViewDependencies();
-            isGameSetup = true;
+            isSetup = true;
         } else {
             resetView();
         }
