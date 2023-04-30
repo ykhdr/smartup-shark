@@ -5,21 +5,23 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.model.SceneSize;
 
 import java.util.Objects;
 
 
-public class AboutView extends VBox {
+public class AboutView extends VBox implements View {
     private final @NotNull Label aboutLabel = new Label();
-
     private final @NotNull Button backBtn = new Button();
 
-    public AboutView() {
+    @Override
+    public void setup(@NotNull SceneSize size) {
         configureView();
 
         configureLabel();
         configureBackBtn();
         addStylesheets();
+
     }
 
     private void configureView() {
@@ -70,4 +72,5 @@ public class AboutView extends VBox {
     public @NotNull Button getBackBtn(){
         return backBtn;
     }
+
 }

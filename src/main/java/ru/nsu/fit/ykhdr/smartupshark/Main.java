@@ -2,7 +2,7 @@ package ru.nsu.fit.ykhdr.smartupshark;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
-import ru.nsu.fit.ykhdr.smartupshark.controller.MenuController;
+import ru.nsu.fit.ykhdr.smartupshark.controller.SceneManager;
 
 public class Main extends Application {
 
@@ -12,7 +12,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage){
-        MenuController menuController = new MenuController(stage);
-        menuController.run();
+        SceneManager sceneManager = SceneManager.getInstance(stage);
+        sceneManager.show();
     }
 }

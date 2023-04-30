@@ -1,58 +1,31 @@
 package ru.nsu.fit.ykhdr.smartupshark.controller;
 
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.view.MenuView;
 
-// CR: unify with another controllers: extract orchestration logic to a separate class
-public class MenuController implements Runnable{
+public class MenuController implements Controller {
+
     private final @NotNull MenuView view;
-    private final @NotNull Stage stage;
 
-    private final @NotNull ScoreboardController scoreboardController;
-    private final @NotNull GameController gameController;
+    private final @NotNull SceneManager sceneManager;
 
-    private final @NotNull AboutController aboutController;
-
-    public MenuController(@NotNull Stage stage)  {
-        this.stage = stage;
-        this.scoreboardController = new ScoreboardController(this::setMenuScene);
-        this.gameController = new GameController(this::setMenuScene);
-        this.aboutController = new AboutController(this::setMenuScene);
-
+    public MenuController(@NotNull SceneManager sceneManager) {
+        this.sceneManager = sceneManager;
         this.view = new MenuView();
 
         setupButtons();
     }
 
-    private void setupButtons(){
-        view.getNewGameBtn().setOnAction(event -> setGameScene());
+    private void setupButtons() {
+        view.getNewGameBtn().setOnAction(event ->  sceneManager.setGameScene());
         view.getExitBtn().setOnAction(event -> System.exit(0));
-        view.getScoreboardBtn().setOnAction(event -> setScoreboardScene());
-        view.getAboutBtn().setOnAction(event -> setAboutScene());
-    }
-
-    private void setGameScene() {
-        stage.setScene(gameController.getScene());
-    }
-
-    private void setScoreboardScene() {
-        stage.setScene(scoreboardController.getScene());
-    }
-
-    private void setAboutScene(){
-        stage.setScene(aboutController.getScene());
-    }
-    private void setMenuScene() {
-        stage.setScene(view.getScene());
+        view.getScoreboardBtn().setOnAction(event -> sceneManager.setScoreboardScene());
+        view.getAboutBtn().setOnAction(event -> sceneManager.setAboutScene());
     }
 
     @Override
-    public void run() {
-        stage.setScene(new Scene(view));
-        stage.setResizable(false);
-
-        stage.show();
+    public @NotNull Scene getScene() {
+        return view.getScene() == null ? new Scene(view) : view.getScene();
     }
 }

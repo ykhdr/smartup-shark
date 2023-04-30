@@ -2,24 +2,40 @@ package ru.nsu.fit.ykhdr.smartupshark.controller;
 
 import javafx.scene.Scene;
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.model.AboutModel;
 import ru.nsu.fit.ykhdr.smartupshark.view.AboutView;
 
-public class AboutController {
+public class AboutController implements Controller {
     private final @NotNull AboutView view;
+    private final @NotNull AboutModel model;
+    private final @NotNull SceneManager sceneManager;
 
-    public AboutController(@NotNull Runnable backToMenuScene) {
+    private boolean isSetup = false;
+
+    public AboutController(@NotNull SceneManager sceneManager) {
+        this.sceneManager = sceneManager;
         this.view = new AboutView();
-
-        setupBackBtn(backToMenuScene);
+        this.model = new AboutModel();
     }
 
-    // CR: use custom interface instead of runnable
-    private void setupBackBtn(@NotNull Runnable backToMenuScene){
-        view.getBackBtn().setOnAction(event -> backToMenuScene.run());
+    private void setupBackBtn() {
+        view.getBackBtn().setOnAction(event -> sceneManager.setMenuScene());
     }
 
-    public @NotNull Scene getScene(){
-        // CR: create view here (and store to field?)
+    private void setupViewDependencies() {
+        setupBackBtn();
+    }
+
+
+    @Override
+    public @NotNull Scene getScene() {
+        if(!isSetup){
+            view.setup(model.getSceneSize());
+            setupViewDependencies();
+
+            isSetup = true;
+        }
+
         return view.getScene() == null ? new Scene(view) : view.getScene();
     }
 }
