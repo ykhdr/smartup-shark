@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.model.GameModel;
+import ru.nsu.fit.ykhdr.smartupshark.model.ScoreFileHandler;
 import ru.nsu.fit.ykhdr.smartupshark.view.GameView;
 
 
@@ -63,7 +64,7 @@ public class GameController implements Controller {
     private void endGame() {
         timer.stop();
         view.endGame(model.getScore());
-        model.writeScore();
+        ScoreFileHandler.writeScore(model.getScore());
         model.reset();
     }
 

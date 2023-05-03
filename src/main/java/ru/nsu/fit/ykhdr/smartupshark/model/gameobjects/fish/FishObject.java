@@ -6,6 +6,7 @@ import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.Direction;
 import ru.nsu.fit.ykhdr.smartupshark.strategy.Strategy;
 
 public sealed abstract class FishObject extends GameObject permits FatFishObject, JellyfishObject, LongFishObject, MidFishObject, SmallFishObject {
+
     private boolean isEatable;
     private final @NotNull Strategy strategy;
     private @NotNull Direction direction;

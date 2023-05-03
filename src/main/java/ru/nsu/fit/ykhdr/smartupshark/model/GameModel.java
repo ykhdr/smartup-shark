@@ -9,13 +9,25 @@ import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.fish.RandomFishObjectFact
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+
+CR: tests
+
+- player eats fish
+- player eats non-eatable fish
+- player eats too big fish
+- player moves
+ */
 public class GameModel {
+
+    private static final int SPAWN_OFFSET = 100;
+
     private final @NotNull List<FishObject> enemies = new ArrayList<>();
     private final @NotNull PlayerObject player = new PlayerObject(GameObjectIdManager.getPlayerId());
 
     private final @NotNull SceneSize fieldSize = new SceneSize(1024, 720);
 
-    private final @NotNull GameTimeManager timeManager = new GameTimeManager();
+    private final @NotNull SpawnTimeManager timeManager = new SpawnTimeManager();
     private int score = 0;
 
     {
@@ -42,24 +54,28 @@ public class GameModel {
         enemies.forEach(this::setEnemyEatable);
 
         if (timeManager.isSpawnEnemyNecessary()) {
-            enemies.add(spawnEnemy());
+            FishObject newEnemy = RandomFishObjectFactory.getFish(fieldSize);
+            enemies.add(newEnemy);
             timeManager.resetSpawnTime();
         }
 
-        if (timeManager.isIncreaseSpawnDelayNecessary()) {
+        if (timeManager.needToDecreaseSpawnTime()) {
             timeManager.reduceDelay();
         }
     }
 
     private void checkEnemyCollisionPlayer(@NotNull FishObject enemy) {
+        // CR: move to player
         final double PLAYER_SIZE_SCALE = 1;
         final double MAX_PLAYER_SIZE = 18050;
 
+        // CR: move to base class for enemy and player
         if (checkEnemyInBoundsOfPlayer(enemy)) {
             if (enemy.isEatable()) {
                 enemy.setDead(true);
                 score += 1;
                 if (player.getSize().getArea() < MAX_PLAYER_SIZE) {
+                    // CR: move to player
                     double weight = player.getSize().getWidth();
                     double height = player.getSize().getHeight();
 
@@ -67,6 +83,7 @@ public class GameModel {
                     player.getSize().setHeight(height + PLAYER_SIZE_SCALE);
                 }
             } else {
+                // CR: not needed
                 player.setDead(true);
             }
         }
@@ -81,12 +98,11 @@ public class GameModel {
     }
 
     private void checkEnemyOutOfBounds(@NotNull FishObject enemy) {
-        int SPAWN_OFFSET = 100;
-
-        if (enemy.getCoordinates().getX() < -SPAWN_OFFSET ||
-                enemy.getCoordinates().getX() > fieldSize.width() + SPAWN_OFFSET ||
-                enemy.getCoordinates().getY() < -SPAWN_OFFSET ||
-                enemy.getCoordinates().getY() > fieldSize.height() + SPAWN_OFFSET) {
+        Coordinates enemyCoordinates = enemy.getCoordinates();
+        if (enemyCoordinates.getX() < -SPAWN_OFFSET ||
+                enemyCoordinates.getX() > fieldSize.width() + SPAWN_OFFSET ||
+                enemyCoordinates.getY() < -SPAWN_OFFSET ||
+                enemyCoordinates.getY() > fieldSize.height() + SPAWN_OFFSET) {
 
             enemy.setDead(true);
         }
@@ -94,10 +110,6 @@ public class GameModel {
 
     private void setEnemyEatable(@NotNull FishObject enemy) {
         enemy.setEatable(enemy.getSize().getArea() < player.getSize().getArea());
-    }
-
-    private @NotNull FishObject spawnEnemy() {
-        return RandomFishObjectFactory.getFish(fieldSize);
     }
 
     public void removeDeadObjects() {
@@ -110,10 +122,6 @@ public class GameModel {
 
         timeManager.resetAll();
         score = 0;
-    }
-
-    public void writeScore() {
-        ScoreFileHandler.writeScore(score);
     }
 
     public @NotNull GameObjects getGameObjects() {

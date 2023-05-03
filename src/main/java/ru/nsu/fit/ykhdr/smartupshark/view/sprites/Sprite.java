@@ -2,7 +2,7 @@ package ru.nsu.fit.ykhdr.smartupshark.view.sprites;
 
 import javafx.scene.shape.Rectangle;
 
-public class Sprite extends Rectangle{
+public class Sprite extends Rectangle {
     private final int id;
     public Sprite(double width, double height, int id) {
         super(width, height);

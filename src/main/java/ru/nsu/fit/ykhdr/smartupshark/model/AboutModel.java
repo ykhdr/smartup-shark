@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+// CR: move to view
 public class AboutModel {
     private final @NotNull SceneSize sceneSize = new SceneSize(1024, 720);
 

@@ -1,6 +1,6 @@
 package ru.nsu.fit.ykhdr.smartupshark.model;
 
-public class GameTimeManager {
+public class SpawnTimeManager {
     private double spawnTime = 0;
     private double spawnDelayIncreaseTime = 0;
     private double spawnDelay = 1;
@@ -19,7 +19,7 @@ public class GameTimeManager {
         return spawnTime > spawnDelay;
     }
 
-    public boolean isIncreaseSpawnDelayNecessary() {
+    public boolean needToDecreaseSpawnTime() {
         return spawnDelayIncreaseTime > 10 && spawnDelay > 0.2;
     }
 
