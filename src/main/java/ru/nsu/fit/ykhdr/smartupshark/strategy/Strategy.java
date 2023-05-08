@@ -1,9 +1,9 @@
 package ru.nsu.fit.ykhdr.smartupshark.strategy;
 
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.Coordinates;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.Direction;
+import ru.nsu.fit.ykhdr.smartupshark.model.Direction;
+import ru.nsu.fit.ykhdr.smartupshark.model.Position;
 
 public interface Strategy {
-    void move(@NotNull Coordinates coordinates, @NotNull Direction direction);
+    @NotNull Position move(@NotNull Position coordinates, @NotNull Direction direction);
 }

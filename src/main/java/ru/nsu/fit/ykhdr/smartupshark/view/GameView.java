@@ -12,25 +12,20 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.model.Direction;
+import ru.nsu.fit.ykhdr.smartupshark.model.Position;
 import ru.nsu.fit.ykhdr.smartupshark.model.SceneSize;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.Direction;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.GameObject;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.GameObjects;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.PlayerObject;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.fish.*;
+import ru.nsu.fit.ykhdr.smartupshark.model.Size;
+import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.*;
 import ru.nsu.fit.ykhdr.smartupshark.view.sprites.Sprite;
 
-import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class GameView extends StackPane implements View {
     private final @NotNull GameField gameField = new GameField();
     private final @NotNull StartBox startBox = new StartBox();
     private final @NotNull EndBox endBox = new EndBox();
-    private @NotNull GameObjects gameObjects = new GameObjects();
-    private final @NotNull Set<Sprite> sprites = new HashSet<>();
-
     @Override
     public void setup(@NotNull SceneSize size) {
         gameField.setup(size);
@@ -62,9 +57,6 @@ public class GameView extends StackPane implements View {
     }
 
     public void endGame(int score) {
-        sprites.clear();
-        gameObjects.clear();
-
         endBox.setScore(score);
 
         gameField.hideScore();
@@ -79,47 +71,37 @@ public class GameView extends StackPane implements View {
         getChildren().add(gameField);
         getChildren().add(startBox);
 
-        sprites.clear();
-        gameObjects.clear();
         gameField.clear();
     }
 
-    public void repaint() {
-        gameField.repaintScore();
+    public void repaint(@NotNull GameObjects gameObjects) {
+        gameField.clear();
+        gameField.repaintScore(gameObjects.score());
 
-        for (GameObject gameObject : gameObjects) {
+        repaintFishes(gameObjects.enemies());
+        repaintPlayer(gameObjects.player());
+    }
 
-            Sprite sprite = sprites
-                    .stream()
-                    .filter(s -> s.getSpriteId() == gameObject.getId())
-                    .findFirst()
-                    .orElse(new Sprite(gameObject.getSize().getWidth(), gameObject.getSize().getHeight(), gameObject.getId()));
+    private void repaintFishes(@NotNull List<FishObject> enemies) {
+        for (FishObject fishObject : enemies) {
+            Position position = fishObject.position();
+            Size size = fishObject.size();
 
-            if (gameObject.isDead()) {
-                sprites.remove(sprite);
-                gameField.removeSprite(sprite);
-                return;
-            }
+            Sprite sprite = new Sprite(position.x(), position.y(), size.width(), size.height());
 
-            if (sprites.add(sprite)) {
-                gameField.addSprite(sprite);
-            }
-
-            switch (gameObject) {
-                case PlayerObject playerObject -> gameField.updatePlayerSprite(sprite, playerObject);
-                case FishObject fishObject -> gameField.updateFishSprite(sprite, fishObject);
-
-                default -> {// ignored
-                }
-            }
-
+            gameField.addSprite(sprite);
+            gameField.updateFishSprite(sprite, fishObject);
         }
     }
 
-    public void update(@NotNull GameObjects gameObjects, int score) {
-        this.gameObjects = gameObjects;
+    private void repaintPlayer(@NotNull PlayerObject playerObject) {
+        Position position = playerObject.position();
+        Size size = playerObject.size();
 
-        gameField.updateScore(score);
+        Sprite sprite = new Sprite(position.x(), position.y(), size.width(), size.height());
+
+        gameField.addSprite(sprite);
+        gameField.updatePlayerSprite(sprite, playerObject);
     }
 
     public void setActionOnBtnStart(@NotNull EventHandler<ActionEvent> action) {
@@ -138,10 +120,11 @@ public class GameView extends StackPane implements View {
 class GameField extends Pane implements View {
     private final @NotNull Label curScoreLabel = new Label();
 
-    private int score;
-
     @Override
     public void setup(@NotNull SceneSize size) {
+        setPrefHeight(size.height());
+        setPrefWidth(size.width());
+
         configureCurScoreLabel();
 
         getChildren().add(curScoreLabel);
@@ -164,63 +147,51 @@ class GameField extends Pane implements View {
         getChildren().add(sprite);
     }
 
-    public void removeSprite(@NotNull Sprite sprite) {
-        getChildren().remove(sprite);
-    }
-
     public void updatePlayerSprite(@NotNull Sprite player, @NotNull PlayerObject playerObject) {
-        player.setLayoutX(playerObject.getCoordinates().getX());
-        player.setLayoutY(playerObject.getCoordinates().getY());
+        player.setX(playerObject.position().x());
+        player.setY(playerObject.position().y());
 
-        player.setHeight(playerObject.getSize().getHeight());
-        player.setWidth(playerObject.getSize().getWidth());
+        player.setHeight(playerObject.size().height());
+        player.setWidth(playerObject.size().width());
 
         updatePlayerStyle(player, playerObject);
     }
 
-    public void updatePlayerStyle(@NotNull Sprite player, @NotNull PlayerObject playerObject) {
-        player.setId(playerObject.isLeftDirection() ? "player-left" : "player-right");
+    private void updatePlayerStyle(@NotNull Sprite player, @NotNull PlayerObject playerObject) {
+        player.setId(playerObject.direction() == Direction.LEFT ? "player-left" : "player-right");
     }
 
-    public void updateNonEatableFishStyle(@NotNull Sprite sprite, @NotNull FishObject fishObject) {
-        Direction direction = fishObject.getDirection();
+    private void updateNonEatableFishStyle(@NotNull Sprite sprite, @NotNull FishObject fishObject) {
+        Direction direction = fishObject.direction();
 
         sprite.setId(
-                switch (fishObject) {
-                    case FatFishObject ignored ->
-                            direction == Direction.LEFT ? "fat-fish-left-red" : "fat-fish-right-red";
-                    case LongFishObject ignored ->
-                            direction == Direction.LEFT ? "long-fish-left-red" : "long-fish-right-red";
-                    case MidFishObject ignored ->
-                            direction == Direction.LEFT ? "mid-fish-left-red" : "mid-fish-right-red";
-                    case SmallFishObject ignored ->
-                            direction == Direction.LEFT ? "small-fish-left-red" : "small-fish-right-red";
-                    case JellyfishObject ignored -> "jellyfish";
+                switch (fishObject.type()) {
+                    case FAT -> direction == Direction.LEFT ? "fat-fish-left-red" : "fat-fish-right-red";
+                    case LONG -> direction == Direction.LEFT ? "long-fish-left-red" : "long-fish-right-red";
+                    case MID -> direction == Direction.LEFT ? "mid-fish-left-red" : "mid-fish-right-red";
+                    case SMALL -> direction == Direction.LEFT ? "small-fish-left-red" : "small-fish-right-red";
+                    case JELLY -> "jellyfish";
                 }
         );
 
     }
 
-    public void updateEatableFishStyle(@NotNull Sprite sprite, @NotNull FishObject fishObject) {
-        Direction direction = fishObject.getDirection();
+    private void updateEatableFishStyle(@NotNull Sprite sprite, @NotNull FishObject fishObject) {
+        Direction direction = fishObject.direction();
 
         sprite.setId(
-                switch (fishObject) {
-                    case FatFishObject ignored ->
-                            direction == Direction.LEFT ? "fat-fish-left-blue" : "fat-fish-right-blue";
-                    case LongFishObject ignored ->
-                            direction == Direction.LEFT ? "long-fish-left-blue" : "long-fish-right-blue";
-                    case MidFishObject ignored ->
-                            direction == Direction.LEFT ? "mid-fish-left-blue" : "mid-fish-right-blue";
-                    case SmallFishObject ignored ->
-                            direction == Direction.LEFT ? "small-fish-left-blue" : "small-fish-right-blue";
-                    case JellyfishObject ignored -> "jellyfish";
+                switch (fishObject.type()) {
+                    case FAT -> direction == Direction.LEFT ? "fat-fish-left-blue" : "fat-fish-right-blue";
+                    case LONG -> direction == Direction.LEFT ? "long-fish-left-blue" : "long-fish-right-blue";
+                    case MID -> direction == Direction.LEFT ? "mid-fish-left-blue" : "mid-fish-right-blue";
+                    case SMALL -> direction == Direction.LEFT ? "small-fish-left-blue" : "small-fish-right-blue";
+                    case JELLY -> "jellyfish";
                 });
     }
 
     public void updateFishSprite(@NotNull Sprite sprite, @NotNull FishObject fishObject) {
-        sprite.setLayoutX(fishObject.getCoordinates().getX());
-        sprite.setLayoutY(fishObject.getCoordinates().getY());
+        sprite.setX(fishObject.position().x());
+        sprite.setY(fishObject.position().y());
 
         if (fishObject.isEatable()) {
             updateEatableFishStyle(sprite, fishObject);
@@ -229,11 +200,7 @@ class GameField extends Pane implements View {
         }
     }
 
-    public void updateScore(int score) {
-        this.score = score;
-    }
-
-    public void repaintScore() {
+    public void repaintScore(int score) {
         curScoreLabel.setText("Score: " + score);
     }
 
@@ -245,7 +212,7 @@ class GameField extends Pane implements View {
         curScoreLabel.setVisible(true);
     }
 
-    public void clear(){
+    public void clear() {
         getChildren().removeIf(s -> s instanceof Sprite);
     }
 }
@@ -274,7 +241,7 @@ class StartBox extends VBox implements View {
     }
 
     public void setActionOnBtnStart(@NotNull EventHandler<ActionEvent> action) {
-       startBtn.setOnAction(action);
+        startBtn.setOnAction(action);
     }
 }
 
@@ -353,6 +320,6 @@ class EndBox extends VBox implements View {
     }
 
     public void setScore(int score) {
-        scoreLabel.setText("Score : "+ score);
+        scoreLabel.setText("Score : " + score);
     }
 }

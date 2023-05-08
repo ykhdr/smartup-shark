@@ -47,10 +47,7 @@ public class GameController implements Controller {
                     return;
                 }
 
-                view.update(model.getGameObjects(), model.getScore());
-                view.repaint();
-
-                model.removeDeadObjects();
+                view.repaint(model.getGameObjects());
             }
         };
     }

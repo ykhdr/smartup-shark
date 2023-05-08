@@ -5,5 +5,6 @@ import ru.nsu.fit.ykhdr.smartupshark.model.Direction;
 import ru.nsu.fit.ykhdr.smartupshark.model.Position;
 import ru.nsu.fit.ykhdr.smartupshark.model.Size;
 
-public record PlayerObject(@NotNull Size size, @NotNull Position position, @NotNull Direction direction) {
+public record FishObject(@NotNull FishType type, @NotNull Size size, boolean isEatable,
+                         @NotNull Position position, @NotNull Direction direction) {
 }

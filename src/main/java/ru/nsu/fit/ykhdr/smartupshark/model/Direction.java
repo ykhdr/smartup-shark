@@ -1,4 +1,4 @@
-package ru.nsu.fit.ykhdr.smartupshark.model.gameobjects;
+package ru.nsu.fit.ykhdr.smartupshark.model;
 
 public enum Direction {
     RIGHT,

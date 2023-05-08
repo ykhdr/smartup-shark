@@ -1,13 +1,14 @@
-package ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.fish;
+package ru.nsu.fit.ykhdr.smartupshark.model.gamemodels;
 
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.Direction;
+import ru.nsu.fit.ykhdr.smartupshark.model.Direction;
+import ru.nsu.fit.ykhdr.smartupshark.model.Size;
 import ru.nsu.fit.ykhdr.smartupshark.strategy.HorizontalSinusoidalStrategy;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public final class FatFishObject extends FishObject {
+public final class FatFishModel extends FishModel {
     private static final @NotNull List<Direction> availableDirections = new ArrayList<>();
 
     static {
@@ -15,15 +16,17 @@ public final class FatFishObject extends FishObject {
         availableDirections.add(Direction.RIGHT);
     }
 
-    public FatFishObject(double sizeScale, int id) {
-        super(new HorizontalSinusoidalStrategy(), Direction.LEFT, id);
+    public FatFishModel(double sizeScale) {
+        super(new HorizontalSinusoidalStrategy(), Direction.LEFT);
 
-        size.setWidth( 40 * sizeScale);
-        size.setHeight(40 * sizeScale);
-    }
 
+        this.size = new Size(40 * sizeScale, 40 * sizeScale);
+        }
+
+    @Override
     public @NotNull List<Direction> getAvailableDirections() {
         return availableDirections;
     }
+
 
 }
