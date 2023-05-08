@@ -3,9 +3,6 @@ module ru.nsu.fit.ykhdr.smartupshark {
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
-    requires com.dlsc.formsfx;
-    requires org.kordamp.ikonli.javafx;
-    requires org.kordamp.bootstrapfx.core;
     requires org.apache.commons.csv;
     requires org.jetbrains.annotations;
 

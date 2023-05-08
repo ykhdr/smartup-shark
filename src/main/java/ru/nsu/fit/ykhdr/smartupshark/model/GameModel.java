@@ -7,16 +7,8 @@ import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-/*
-
-CR: tests
-
-- player eats fish
-- player eats non-eatable fish
-- player eats too big fish
-- player moves
- */
 public class GameModel {
 
     private final @NotNull List<FishModel> enemies = new ArrayList<>();
@@ -31,6 +23,23 @@ public class GameModel {
 
     {
         player.setPosition(new Position(gameField.width() / 2, gameField.height() / 2));
+    }
+
+    public GameModel(){
+    }
+
+    public GameModel(@NotNull String propertyPath){
+        ConfigParser configParser = new ConfigParser(propertyPath);
+        addFishFromConfig(configParser.parse());
+    }
+
+    private void addFishFromConfig(@NotNull Map<FishType,Position> configModels) {
+        for (Map.Entry<FishType, Position> entry : configModels.entrySet()) {
+            FishModel fishModel = FishFactory.generate(entry.getKey());
+            fishModel.setPosition(entry.getValue());
+            setEnemyEatable(fishModel);
+            enemies.add(fishModel);
+        }
     }
 
     public void movePlayer(double mouseX, double mouseY) {

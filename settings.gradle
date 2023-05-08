@@ -1,1 +1,5 @@
 rootProject.name = "smartup-shark"
+include 'test'
+include 'src:test'
+findProject(':src:test')?.name = 'test'
+
