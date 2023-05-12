@@ -13,9 +13,7 @@ public class GameModel {
 
     private final @NotNull List<FishModel> enemies = new ArrayList<>();
     private final @NotNull PlayerModel player = new PlayerModel(Direction.LEFT);
-
-    private final @NotNull SceneSize sceneSize = new SceneSize(1024, 720);
-    private final @NotNull GameField gameField = new GameField(sceneSize.width(), sceneSize.height());
+    private final @NotNull GameField gameField = new GameField(1024, 720);
 
     private final @NotNull SpawnTimeManager timeManager = new SpawnTimeManager();
     private int score = 0;
@@ -57,7 +55,7 @@ public class GameModel {
 
         if (timeManager.isSpawnEnemyNecessary()) {
             FishModel newEnemy = FishFactory.generate();
-            FishPositionGenerator.setRandomCoordinates(newEnemy, sceneSize);
+            FishPositionGenerator.setRandomCoordinates(newEnemy, gameField);
 
             enemies.add(newEnemy);
             timeManager.resetSpawnTime();
@@ -96,6 +94,7 @@ public class GameModel {
     public void reset() {
         enemies.clear();
         gameOver = false;
+        player.setSize(new Size(30, 20));
 
         timeManager.resetAll();
         score = 0;
@@ -115,9 +114,5 @@ public class GameModel {
 
     public boolean isGameOver() {
         return gameOver;
-    }
-
-    public @NotNull SceneSize getSceneSize() {
-        return sceneSize;
     }
 }

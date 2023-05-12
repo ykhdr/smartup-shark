@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.SceneSize;
 
 import java.util.Objects;
 
@@ -18,7 +17,7 @@ public class AboutView extends VBox implements View {
     private final @NotNull Button backBtn = new Button();
 
     @Override
-    public void setup(@NotNull SceneSize size) {
+    public void setup() {
         setPrefHeight(720);
         setPrefWidth(1024);
         setAlignment(Pos.CENTER);

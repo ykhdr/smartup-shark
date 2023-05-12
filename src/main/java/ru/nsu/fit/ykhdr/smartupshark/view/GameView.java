@@ -14,7 +14,6 @@ import javafx.scene.text.TextAlignment;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.model.Direction;
 import ru.nsu.fit.ykhdr.smartupshark.model.Position;
-import ru.nsu.fit.ykhdr.smartupshark.model.SceneSize;
 import ru.nsu.fit.ykhdr.smartupshark.model.Size;
 import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.*;
 import ru.nsu.fit.ykhdr.smartupshark.view.sprites.Sprite;
@@ -27,10 +26,10 @@ public class GameView extends StackPane implements View {
     private final @NotNull StartBox startBox = new StartBox();
     private final @NotNull EndBox endBox = new EndBox();
     @Override
-    public void setup(@NotNull SceneSize size) {
-        gameField.setup(size);
-        startBox.setup(size);
-        endBox.setup(size);
+    public void setup() {
+        gameField.setup();
+        startBox.setup();
+        endBox.setup();
 
         addStylesheets();
 
@@ -121,9 +120,9 @@ class GameField extends Pane implements View {
     private final @NotNull Label curScoreLabel = new Label();
 
     @Override
-    public void setup(@NotNull SceneSize size) {
-        setPrefHeight(size.height());
-        setPrefWidth(size.width());
+    public void setup() {
+        setPrefWidth(1024);
+        setPrefHeight(720);
 
         configureCurScoreLabel();
 
@@ -221,10 +220,10 @@ class StartBox extends VBox implements View {
     private final @NotNull Button startBtn = new Button();
 
     @Override
-    public void setup(@NotNull SceneSize size) {
+    public void setup() {
         setAlignment(Pos.CENTER);
-        setPrefWidth(size.width());
-        setPrefHeight(size.height());
+        setPrefWidth(1024);
+        setPrefHeight(720);
 
         configureStartBtn();
 
@@ -253,10 +252,10 @@ class EndBox extends VBox implements View {
     private final @NotNull Button backToMenuBtn = new Button();
 
     @Override
-    public void setup(@NotNull SceneSize size) {
+    public void setup() {
         setAlignment(Pos.CENTER);
-        setPrefWidth(size.width());
-        setPrefHeight(size.height());
+        setPrefWidth(1024);
+        setPrefHeight(720);
         setSpacing(20);
 
         configureEndLabel();

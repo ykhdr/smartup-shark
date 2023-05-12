@@ -2,14 +2,12 @@ package ru.nsu.fit.ykhdr.smartupshark.controller;
 
 import javafx.scene.Scene;
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.MenuModel;
 import ru.nsu.fit.ykhdr.smartupshark.view.MenuView;
 
 public class MenuController implements Controller {
 
     private final @NotNull MenuView view;
     private final @NotNull Scene scene;
-    private final @NotNull MenuModel model;
     private final @NotNull SceneManager sceneManager;
 
     private boolean isSetup = false;
@@ -18,7 +16,6 @@ public class MenuController implements Controller {
         this.sceneManager = sceneManager;
         this.view = new MenuView();
         this.scene = new Scene(view);
-        this.model = new MenuModel();
 
         setupViewDependencies();
     }
@@ -33,7 +30,7 @@ public class MenuController implements Controller {
     @Override
     public @NotNull Scene getScene() {
         if(!isSetup){
-            view.setup(model.getSceneSize());
+            view.setup();
             setupViewDependencies();
 
             isSetup = true;

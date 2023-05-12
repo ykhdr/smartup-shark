@@ -31,9 +31,10 @@ public class GameController implements Controller {
 
     private void setupViewDependencies() {
         view.setActionOnBtnStart(event -> startGame());
-
         view.setActionOnBtnNewGame(event -> newGame());
         view.setActionOnBtnBackToMenu(event -> sceneManager.setMenuScene());
+
+        scene.setOnMouseMoved((MouseEvent event) -> model.movePlayer(event.getX(), event.getY()));
     }
 
     private @NotNull AnimationTimer createTimer() {
@@ -72,7 +73,7 @@ public class GameController implements Controller {
     @Override
     public @NotNull Scene getScene() {
         if (!isSetup) {
-            view.setup(model.getSceneSize());
+            view.setup();
 
             setupViewDependencies();
             isSetup = true;
@@ -83,8 +84,6 @@ public class GameController implements Controller {
     }
 
     private void startGame() {
-        scene.setOnMouseMoved((MouseEvent event) -> model.movePlayer(event.getX(), event.getY()));
-
         view.startGame();
         timer.start();
     }

@@ -12,7 +12,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.SceneSize;
 import ru.nsu.fit.ykhdr.smartupshark.model.ScoreData;
 
 import java.util.List;
@@ -25,9 +24,9 @@ public class ScoreboardView extends AnchorPane implements View {
     private final @NotNull Button backBtn = new Button();
 
     @Override
-    public void setup(@NotNull SceneSize size) {
-        setPrefWidth(size.width());
-        setPrefHeight(size.height());
+    public void setup() {
+        setPrefWidth(1024);
+        setPrefHeight(720);
 
         configureViewComponents();
 

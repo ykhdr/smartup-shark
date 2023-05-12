@@ -8,7 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.SceneSize;
 
 import java.util.Objects;
 
@@ -23,9 +22,9 @@ public class MenuView extends VBox implements View {
     private final @NotNull Region lowerMargin = new Region();
 
     @Override
-    public void setup(@NotNull SceneSize size) {
-        setPrefWidth(size.width());
-        setPrefHeight(size.height());
+    public void setup() {
+        setPrefWidth(1024);
+        setPrefHeight(720);
         setAlignment(Pos.CENTER);
         setSpacing(20);
 

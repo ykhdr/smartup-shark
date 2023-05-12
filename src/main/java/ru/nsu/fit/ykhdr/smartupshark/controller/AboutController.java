@@ -23,11 +23,10 @@ public class AboutController implements Controller {
         view.setText(model.getAboutText());
     }
 
-
     @Override
     public @NotNull Scene getScene() {
         if(!isSetup){
-            view.setup(model.getSceneSize());
+            view.setup();
             setupViewDependencies();
 
             isSetup = true;

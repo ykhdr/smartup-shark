@@ -13,8 +13,8 @@ public class GameModelTest {
     public void playerDoesNotMoveTest() {
         GameModel gameModel = new GameModel();
 
-        double mouseX = gameModel.getSceneSize().width() / 2;
-        double mouseY = gameModel.getSceneSize().height() / 2;
+        double mouseX = 512;
+        double mouseY = 360;
 
         double playerWidth = 30;
         double playerHeight = 20;

@@ -3,14 +3,12 @@ package ru.nsu.fit.ykhdr.smartupshark.controller;
 import javafx.scene.Scene;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.model.ScoreFileHandler;
-import ru.nsu.fit.ykhdr.smartupshark.model.ScoreboardModel;
 import ru.nsu.fit.ykhdr.smartupshark.view.ScoreboardView;
 
 public class ScoreboardController implements Controller {
 
     private final @NotNull ScoreboardView view;
     private final @NotNull Scene scene;
-    private final @NotNull ScoreboardModel model;
     private final @NotNull SceneManager sceneManager;
 
     private boolean isSetup = false;
@@ -20,7 +18,6 @@ public class ScoreboardController implements Controller {
         this.sceneManager = sceneManager;
         this.view = new ScoreboardView();
         this.scene = new Scene(view);
-        this.model = new ScoreboardModel();
     }
 
     private void setScoreboardItems() {
@@ -35,7 +32,7 @@ public class ScoreboardController implements Controller {
     @Override
     public @NotNull Scene getScene() {
         if (!isSetup) {
-            view.setup(model.getSceneSize());
+            view.setup();
             setupViewDependencies();
             isSetup = true;
         }
