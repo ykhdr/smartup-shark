@@ -6,14 +6,20 @@ module ru.nsu.fit.ykhdr.smartupshark {
     requires org.controlsfx.controls;
     requires org.apache.commons.csv;
     requires org.jetbrains.annotations;
+    requires com.google.gson;
 
-    exports ru.nsu.fit.ykhdr.smartupshark;
+    exports ru.nsu.fit.ykhdr.smartupshark to com.google.gson, javafx.graphics;
     exports ru.nsu.fit.ykhdr.smartupshark.controller;
     exports ru.nsu.fit.ykhdr.smartupshark.model;
-    exports ru.nsu.fit.ykhdr.smartupshark.gameobjects;
-    exports ru.nsu.fit.ykhdr.smartupshark.model.gamemodels;
+    exports ru.nsu.fit.ykhdr.smartupshark.gameobjects to com.google.gson;
     exports ru.nsu.fit.ykhdr.smartupshark.strategy;
-    opens ru.nsu.fit.ykhdr.smartupshark.gameobjects to javafx.fxml;
-    opens ru.nsu.fit.ykhdr.smartupshark.model.gamemodels to javafx.fxml;
-    opens ru.nsu.fit.ykhdr.smartupshark.model to javafx.fxml;
+    exports ru.nsu.fit.ykhdr.smartupshark.model.utils;
+    exports ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.attributes;
+    exports ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes to com.google.gson;
+    exports ru.nsu.fit.ykhdr.smartupshark.score;
+    exports ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.fishes;
+    exports ru.nsu.fit.ykhdr.smartupshark.model.gameutils;
+    exports ru.nsu.fit.ykhdr.smartupshark.model.gamemodels;
+    exports ru.nsu.fit.ykhdr.smartupshark.config to com.google.gson;
+
 }

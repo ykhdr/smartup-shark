@@ -1,17 +1,19 @@
 package ru.nsu.fit.ykhdr.smartupshark.model.gamemodels;
 
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.Direction;
-import ru.nsu.fit.ykhdr.smartupshark.model.Position;
-import ru.nsu.fit.ykhdr.smartupshark.model.Size;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.attributes.Bounds;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Direction;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Position;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Size;
 
 public abstract class GameObjectModel {
     protected @NotNull Position position = new Position(0,0);
-    protected @NotNull Size size = new Size(0,0);
+    protected @NotNull Size size;
     protected @NotNull Direction direction;
 
-    protected GameObjectModel(@NotNull Direction direction) {
+    protected GameObjectModel(@NotNull Size size,@NotNull Direction direction) {
         this.direction = direction;
+        this.size = size;
     }
 
     public @NotNull Position getPosition() {

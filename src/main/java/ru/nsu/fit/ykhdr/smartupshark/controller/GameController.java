@@ -4,29 +4,33 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.config.GameConfig;
+import ru.nsu.fit.ykhdr.smartupshark.config.ConfigParser;
 import ru.nsu.fit.ykhdr.smartupshark.model.GameModel;
-import ru.nsu.fit.ykhdr.smartupshark.model.ScoreFileHandler;
+import ru.nsu.fit.ykhdr.smartupshark.model.utils.ScoreFileHandler;
 import ru.nsu.fit.ykhdr.smartupshark.view.GameView;
 
 
 public class GameController implements Controller {
+    private static final @NotNull String DEFAULT_CONFIG_PATH = "src/main/resources/configs/default-config.json";
 
     private final @NotNull GameView view;
     private final @NotNull Scene scene;
     private final @NotNull GameModel model;
     private final @NotNull SceneManager sceneManager;
-
     private final @NotNull AnimationTimer timer;
-
     private boolean isSetup = false;
 
     public GameController(@NotNull SceneManager sceneManager) {
         this.sceneManager = sceneManager;
         this.view = new GameView();
         this.scene = new Scene(view);
-        this.model = new GameModel();
         this.timer = createTimer();
 
+        ConfigParser configParser = ConfigParser.getInstance();
+        GameConfig config = configParser.parse(DEFAULT_CONFIG_PATH);
+
+        this.model = new GameModel(config.fieldSize(),config.gameObjects());
     }
 
     private void setupViewDependencies() {

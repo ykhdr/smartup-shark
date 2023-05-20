@@ -1,4 +1,4 @@
-package ru.nsu.fit.ykhdr.smartupshark.model;
+package ru.nsu.fit.ykhdr.smartupshark.score;
 
 import org.jetbrains.annotations.NotNull;
 

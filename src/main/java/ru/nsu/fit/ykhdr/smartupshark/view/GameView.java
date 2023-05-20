@@ -16,9 +16,9 @@ import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishObject;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.GameObjects;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
 // CR: move to game object
-import ru.nsu.fit.ykhdr.smartupshark.model.Direction;
-import ru.nsu.fit.ykhdr.smartupshark.model.Position;
-import ru.nsu.fit.ykhdr.smartupshark.model.Size;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Direction;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Position;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Size;
 import ru.nsu.fit.ykhdr.smartupshark.view.sprites.Sprite;
 
 import java.util.List;

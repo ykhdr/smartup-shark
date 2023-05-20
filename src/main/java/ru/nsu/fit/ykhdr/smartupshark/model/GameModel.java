@@ -1,63 +1,50 @@
 package ru.nsu.fit.ykhdr.smartupshark.model;
 
-
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishObject;
-import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishType;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.GameObjects;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
-import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.*;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Size;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.PlayerModel;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.attributes.GameField;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.fishes.FishFactory;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.fishes.FishModel;
+import ru.nsu.fit.ykhdr.smartupshark.model.gameutils.FishPositionGenerator;
+import ru.nsu.fit.ykhdr.smartupshark.model.gameutils.ModelConverter;
+import ru.nsu.fit.ykhdr.smartupshark.model.gameutils.SpawnTimeManager;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 // CR: create subpackages
 public class GameModel {
 
-    private final @NotNull List<FishModel> enemies = new ArrayList<>();
-    private final @NotNull PlayerModel player = new PlayerModel(Direction.LEFT);
-    private final @NotNull GameField gameField = new GameField(1024, 720);
+    private final @NotNull List<FishModel> enemies;
+    private final @NotNull PlayerModel player;
+    private final @NotNull GameField gameField;
 
     private final @NotNull SpawnTimeManager timeManager = new SpawnTimeManager();
-    private int score = 0;
+    private int score;
     private boolean gameOver = false;
 
-    {
-        player.setPosition(new Position(gameField.width() / 2, gameField.height() / 2));
-    }
+    public GameModel(@NotNull Size fieldSize, @NotNull GameObjects gameObjects) {
+        this.gameField = new GameField(fieldSize.width(), fieldSize.height());
 
-    /*
+        PlayerObject playerObject = gameObjects.player();
 
-    1024
-    720
-    player_pos = 612
+        this.player = new PlayerModel(playerObject.size(), playerObject.direction());
+        player.setPosition(playerObject.position());
 
-    GameObjects(PlayerObject player, ...,  Size fieldSize)
+        this.enemies = gameObjects.enemies().stream()
+                .map(fishObject -> {
+                    FishModel fishModel = FishFactory.FISH_FACTORIES.get(fishObject.type()).getFish(fishObject.size(), fishObject.direction());
+                    fishModel.setEatable(fishObject.isEatable());
+                    fishModel.setPosition(fishObject.position());
+                    return fishModel;
+                })
+                .collect(Collectors.toList());
 
-    1. ???(GameObjects gameObjects, Size fieldSize)
-    2. GameModel(GameObjects gameObjects, Size fieldSize)
-
-
-     */
-
-    // CR: pass game objects, only one ctor
-    public GameModel(){
-
-    }
-
-    public GameModel(@NotNull String propertyPath){
-        ConfigParser configParser = new ConfigParser(propertyPath);
-        addFishFromConfig(configParser.parse());
-    }
-
-    private void addFishFromConfig(@NotNull Map<FishType,Position> configModels) {
-        for (Map.Entry<FishType, Position> entry : configModels.entrySet()) {
-            FishModel fishModel = FishFactory.generate(entry.getKey());
-            fishModel.setPosition(entry.getValue());
-            setEnemyEatable(fishModel);
-            enemies.add(fishModel);
-        }
+        this.score = gameObjects.score();
     }
 
     public void movePlayer(double mouseX, double mouseY) {

@@ -1,9 +1,11 @@
-package ru.nsu.fit.ykhdr.smartupshark.model.gamemodels;
+package ru.nsu.fit.ykhdr.smartupshark.model.gameutils;
 
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishObject;
-import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishType;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.FishType;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.PlayerModel;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.fishes.*;
 
 import java.util.List;
 

@@ -1,8 +1,9 @@
-package ru.nsu.fit.ykhdr.smartupshark.model;
+package ru.nsu.fit.ykhdr.smartupshark.model.utils;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.score.ScoreData;
 
 import java.io.*;
 import java.nio.file.Files;

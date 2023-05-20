@@ -2,7 +2,7 @@ package ru.nsu.fit.ykhdr.smartupshark.controller;
 
 import javafx.scene.Scene;
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.ScoreFileHandler;
+import ru.nsu.fit.ykhdr.smartupshark.model.utils.ScoreFileHandler;
 import ru.nsu.fit.ykhdr.smartupshark.view.ScoreboardView;
 
 public class ScoreboardController implements Controller {

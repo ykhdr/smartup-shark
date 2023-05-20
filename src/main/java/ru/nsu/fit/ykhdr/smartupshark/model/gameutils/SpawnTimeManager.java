@@ -1,4 +1,4 @@
-package ru.nsu.fit.ykhdr.smartupshark.model;
+package ru.nsu.fit.ykhdr.smartupshark.model.gameutils;
 
 public class SpawnTimeManager {
     private double spawnTime = 0;

@@ -1,9 +1,10 @@
-package ru.nsu.fit.ykhdr.smartupshark.model.gamemodels;
+package ru.nsu.fit.ykhdr.smartupshark.model.gameutils;
 
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.Direction;
-import ru.nsu.fit.ykhdr.smartupshark.model.GameField;
-import ru.nsu.fit.ykhdr.smartupshark.model.Position;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Direction;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.attributes.GameField;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Position;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.fishes.FishModel;
 
 import java.util.Random;
 

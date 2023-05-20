@@ -1,18 +1,16 @@
 package ru.nsu.fit.ykhdr.smartupshark.model.gamemodels;
 
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.Direction;
-import ru.nsu.fit.ykhdr.smartupshark.model.Position;
-import ru.nsu.fit.ykhdr.smartupshark.model.Size;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Direction;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Position;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Size;
 
 public class PlayerModel extends GameObjectModel {
     private static final double PLAYER_SIZE_SCALE = 1;
     private static final double MAX_PLAYER_AREA = 18050;
 
-    public PlayerModel(@NotNull Direction direction) {
-        super(direction);
-
-        this.size = new Size(30, 20);
+    public PlayerModel(@NotNull Size size, @NotNull Direction direction) {
+        super(size, direction);
     }
 
     public void increaseSize() {

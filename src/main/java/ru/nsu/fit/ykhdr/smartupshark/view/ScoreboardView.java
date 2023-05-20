@@ -12,7 +12,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.ScoreData;
+import ru.nsu.fit.ykhdr.smartupshark.score.ScoreData;
 
 import java.util.List;
 import java.util.Objects;
