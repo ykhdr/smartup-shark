@@ -8,7 +8,7 @@ public abstract class SinusoidalLogic {
     protected double phase;
     protected double speed;
 
-    public SinusoidalLogic() {
+    protected SinusoidalLogic() {
         Random random = new Random();
 
         phase = random.nextDouble(1);

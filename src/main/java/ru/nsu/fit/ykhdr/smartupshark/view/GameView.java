@@ -258,17 +258,21 @@ class EndBox extends VBox implements View {
         setPrefHeight(720);
         setSpacing(20);
 
-        configureEndLabel();
-        configureScoreLabel();
-        configureOffset();
-        configureNewGameBtn();
-        configureBackToMenuBtn();
+        configureViewComponents();
 
         getChildren().add(endLabel);
         getChildren().add(scoreLabel);
         getChildren().add(offset);
         getChildren().add(newGameBtn);
         getChildren().add(backToMenuBtn);
+    }
+
+    private void configureViewComponents(){
+        configureEndLabel();
+        configureScoreLabel();
+        configureOffset();
+        configureNewGameBtn();
+        configureBackToMenuBtn();
     }
 
     private void configureEndLabel() {
