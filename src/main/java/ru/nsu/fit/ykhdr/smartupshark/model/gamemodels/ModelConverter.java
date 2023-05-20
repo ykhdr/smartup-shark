@@ -1,11 +1,14 @@
 package ru.nsu.fit.ykhdr.smartupshark.model.gamemodels;
 
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.*;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishObject;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishType;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
 
 import java.util.List;
 
 public class ModelConverter {
+
     public static @NotNull PlayerObject convertPlayerToObject(@NotNull PlayerModel model) {
         return new PlayerObject(model.getSize(), model.getPosition(), model.getDirection());
     }

@@ -12,10 +12,13 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishObject;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.GameObjects;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
+// CR: move to game object
 import ru.nsu.fit.ykhdr.smartupshark.model.Direction;
 import ru.nsu.fit.ykhdr.smartupshark.model.Position;
 import ru.nsu.fit.ykhdr.smartupshark.model.Size;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.*;
 import ru.nsu.fit.ykhdr.smartupshark.view.sprites.Sprite;
 
 import java.util.List;

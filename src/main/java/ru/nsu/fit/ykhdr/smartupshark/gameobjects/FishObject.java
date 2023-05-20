@@ -1,4 +1,4 @@
-package ru.nsu.fit.ykhdr.smartupshark.model.gameobjects;
+package ru.nsu.fit.ykhdr.smartupshark.gameobjects;
 
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.model.Direction;

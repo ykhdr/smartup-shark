@@ -12,8 +12,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+// CR: make singleton
+// CR: store top-20
 public class ScoreFileHandler {
 
+    // CR(minor): maybe not csv?
     private static final Path CSV_PATH = Path.of("src/main/resources/data/scores.csv");
 
     private static final List<ScoreData> scoreDataList = new ArrayList<>();
@@ -29,6 +32,7 @@ public class ScoreFileHandler {
     public static void writeScore(int score) {
         scoreDataList.add(createScoreDataFromScore(score));
 
+        // CR: move to separate method
         if (!Files.exists(CSV_PATH)) {
             createFile();
         }

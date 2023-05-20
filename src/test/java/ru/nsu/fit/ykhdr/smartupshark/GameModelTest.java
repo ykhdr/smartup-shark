@@ -4,9 +4,10 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import ru.nsu.fit.ykhdr.smartupshark.model.Direction;
 import ru.nsu.fit.ykhdr.smartupshark.model.GameModel;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.GameObjects;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.PlayerObject;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.GameObjects;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
 
+// CR: think which invariants we have in program, move them to config file in order to test them
 public class GameModelTest {
 
     @Test

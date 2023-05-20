@@ -2,13 +2,17 @@ package ru.nsu.fit.ykhdr.smartupshark.model;
 
 
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishObject;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishType;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.GameObjects;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
 import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.*;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+// CR: create subpackages
 public class GameModel {
 
     private final @NotNull List<FishModel> enemies = new ArrayList<>();
@@ -23,7 +27,23 @@ public class GameModel {
         player.setPosition(new Position(gameField.width() / 2, gameField.height() / 2));
     }
 
+    /*
+
+    1024
+    720
+    player_pos = 612
+
+    GameObjects(PlayerObject player, ...,  Size fieldSize)
+
+    1. ???(GameObjects gameObjects, Size fieldSize)
+    2. GameModel(GameObjects gameObjects, Size fieldSize)
+
+
+     */
+
+    // CR: pass game objects, only one ctor
     public GameModel(){
+
     }
 
     public GameModel(@NotNull String propertyPath){
@@ -101,6 +121,7 @@ public class GameModel {
     }
 
     public @NotNull GameObjects getGameObjects() {
+        // CR: just convert here
         List<FishObject> fishObjectList = ModelConverter.convertFishListToObjectList(enemies);
         PlayerObject playerObject = ModelConverter.convertPlayerToObject(player);
 

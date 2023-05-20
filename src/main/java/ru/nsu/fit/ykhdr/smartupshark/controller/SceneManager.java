@@ -35,6 +35,7 @@ public class SceneManager {
     }
     
     void setScoreboardScene() {
+        // CR: create controllers only when needed
         stage.setScene(scoreboardController.getScene());
     }
     

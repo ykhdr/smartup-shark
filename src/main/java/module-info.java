@@ -1,3 +1,4 @@
+// CR: what this file does
 module ru.nsu.fit.ykhdr.smartupshark {
     requires javafx.controls;
     requires javafx.fxml;
@@ -9,10 +10,10 @@ module ru.nsu.fit.ykhdr.smartupshark {
     exports ru.nsu.fit.ykhdr.smartupshark;
     exports ru.nsu.fit.ykhdr.smartupshark.controller;
     exports ru.nsu.fit.ykhdr.smartupshark.model;
-    exports ru.nsu.fit.ykhdr.smartupshark.model.gameobjects;
+    exports ru.nsu.fit.ykhdr.smartupshark.gameobjects;
     exports ru.nsu.fit.ykhdr.smartupshark.model.gamemodels;
     exports ru.nsu.fit.ykhdr.smartupshark.strategy;
-    opens ru.nsu.fit.ykhdr.smartupshark.model.gameobjects to javafx.fxml;
+    opens ru.nsu.fit.ykhdr.smartupshark.gameobjects to javafx.fxml;
     opens ru.nsu.fit.ykhdr.smartupshark.model.gamemodels to javafx.fxml;
     opens ru.nsu.fit.ykhdr.smartupshark.model to javafx.fxml;
 }

@@ -2,7 +2,7 @@ package ru.nsu.fit.ykhdr.smartupshark.model.gamemodels;
 
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.model.Position;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.FishType;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishType;
 
 import java.io.IOException;
 import java.util.Map;

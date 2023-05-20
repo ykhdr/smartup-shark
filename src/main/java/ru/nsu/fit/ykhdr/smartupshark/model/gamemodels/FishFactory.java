@@ -2,7 +2,7 @@ package ru.nsu.fit.ykhdr.smartupshark.model.gamemodels;
 
 
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameobjects.FishType;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishType;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,6 +10,7 @@ import java.util.Random;
 
 @FunctionalInterface
 public interface FishFactory {
+    // CR: map instead of list
     @NotNull List<FishFactory> FISH_FACTORIES = Arrays.asList(
             FatFishModel::new,
             JellyfishModel::new,

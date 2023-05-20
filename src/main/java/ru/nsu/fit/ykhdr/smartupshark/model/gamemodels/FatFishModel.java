@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class FatFishModel extends FishModel {
+    // CR: maybe pass to ctor
     private static final @NotNull List<Direction> availableDirections = new ArrayList<>();
 
     static {
@@ -19,9 +20,8 @@ public final class FatFishModel extends FishModel {
     public FatFishModel(double sizeScale) {
         super(new HorizontalSinusoidalStrategy(), Direction.LEFT);
 
-
         this.size = new Size(40 * sizeScale, 40 * sizeScale);
-        }
+    }
 
     @Override
     public @NotNull List<Direction> getAvailableDirections() {

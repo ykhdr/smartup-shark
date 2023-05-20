@@ -2,6 +2,7 @@ package ru.nsu.fit.ykhdr.smartupshark.strategy;
 
 import java.util.Random;
 
+// CR: store data as field in strategies
 public abstract class SinusoidalLogic {
     protected double amplitude;
     protected double frequency;

@@ -29,6 +29,7 @@ public class PlayerModel extends GameObjectModel {
     public void move(double x, double y) {
         double curX = position.x();
 
+        // CR: use setter
         position = new Position(x - size.width() / 2, y - size.height() / 2);
 
         setDirection(position.x() < curX ? Direction.LEFT : Direction.RIGHT);

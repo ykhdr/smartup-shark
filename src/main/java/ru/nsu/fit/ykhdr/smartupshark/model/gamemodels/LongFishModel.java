@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class LongFishModel extends FishModel {
+
     private static final @NotNull List<Direction> availableDirections = new ArrayList<>();
 
     static {
