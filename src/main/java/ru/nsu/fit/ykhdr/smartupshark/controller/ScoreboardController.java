@@ -10,6 +10,7 @@ public class ScoreboardController implements Controller {
     private final @NotNull ScoreboardView view;
     private final @NotNull Scene scene;
     private final @NotNull SceneManager sceneManager;
+    private final @NotNull ScoreFileHandler scoreFileHandler = ScoreFileHandler.getInstance();
 
     private boolean isSetup = false;
 
@@ -21,7 +22,7 @@ public class ScoreboardController implements Controller {
     }
 
     private void setScoreboardItems() {
-        view.setItems(ScoreFileHandler.getScoreDataList());
+        view.setItems(scoreFileHandler.getScoreDataList());
     }
 
     private void setupViewDependencies() {

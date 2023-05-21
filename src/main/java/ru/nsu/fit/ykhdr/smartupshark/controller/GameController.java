@@ -17,6 +17,7 @@ public class GameController implements Controller {
     private final @NotNull GameView view;
     private final @NotNull Scene scene;
     private final @NotNull GameModel model;
+    private final @NotNull ScoreFileHandler scoreFileHandler = ScoreFileHandler.getInstance();
     private final @NotNull SceneManager sceneManager;
     private final @NotNull AnimationTimer timer;
     private boolean isSetup = false;
@@ -66,7 +67,7 @@ public class GameController implements Controller {
     private void endGame() {
         timer.stop();
         view.endGame(model.getScore());
-        ScoreFileHandler.writeScore(model.getScore());
+        scoreFileHandler.writeScore(model.getScore());
         model.reset();
     }
 
