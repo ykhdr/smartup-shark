@@ -7,14 +7,15 @@ import org.jetbrains.annotations.Nullable;
 public class SceneManager {
     private final @NotNull Stage stage;
 
-    private final @NotNull Controller menuController;
-    private final @NotNull Controller gameController;
-    private final @NotNull Controller aboutController;
-    private final @NotNull Controller scoreboardController;
+    private @Nullable Controller menuController;
+    private @Nullable Controller gameController;
+    private @Nullable Controller aboutController;
+    private @Nullable Controller scoreboardController;
 
     private static @Nullable SceneManager sceneManager;
+
     public static @NotNull SceneManager getInstance(@NotNull Stage stage) {
-        if(sceneManager == null){
+        if (sceneManager == null) {
             sceneManager = new SceneManager(stage);
         }
 
@@ -23,31 +24,41 @@ public class SceneManager {
 
     private SceneManager(@NotNull Stage stage) {
         this.stage = stage;
-        
-        menuController = new MenuController(this);
-        gameController = new GameController(this);
-        aboutController = new AboutController(this);
-        scoreboardController = new ScoreboardController(this);
     }
 
     void setGameScene() {
+        if (gameController == null) {
+            gameController = new GameController(this);
+        }
+
         stage.setScene(gameController.getScene());
     }
-    
+
     void setScoreboardScene() {
-        // CR: create controllers only when needed
+        if (scoreboardController == null) {
+            scoreboardController = new ScoreboardController(this);
+        }
+
         stage.setScene(scoreboardController.getScene());
     }
-    
-    void setAboutScene(){
+
+    void setAboutScene() {
+        if (aboutController == null) {
+            aboutController = new AboutController(this);
+        }
+
         stage.setScene(aboutController.getScene());
     }
-    
+
     void setMenuScene() {
+        if (menuController == null) {
+            menuController = new MenuController(this);
+        }
+
         stage.setScene(menuController.getScene());
     }
 
-    public void show(){
+    public void show() {
         setMenuScene();
         stage.setResizable(false);
         stage.show();

@@ -19,7 +19,7 @@ public sealed abstract class FishModel extends GameObjectModel permits FatFishMo
     }
 
     public void move() {
-        position = strategy.move(position, direction);
+          setPosition(strategy.move(getPosition(), getDirection()));
     }
 
     public boolean isEatable() {

@@ -1,4 +1,3 @@
-// CR: what this file does
 module ru.nsu.fit.ykhdr.smartupshark {
     requires javafx.controls;
     requires javafx.fxml;

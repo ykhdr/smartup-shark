@@ -14,22 +14,21 @@ public class PlayerModel extends GameObjectModel {
     }
 
     public void increaseSize() {
-        if (size.height() * size.width() >= MAX_PLAYER_AREA) {
+        if (getSize().height() * getSize().width() >= MAX_PLAYER_AREA) {
             return;
         }
 
-        double width = size.width();
-        double height = size.height();
+        double width = getSize().width();
+        double height = getSize().height();
 
-        size = new Size(width + PLAYER_SIZE_SCALE, height + PLAYER_SIZE_SCALE);
+        setSize(new Size(width + PLAYER_SIZE_SCALE, height + PLAYER_SIZE_SCALE));
     }
 
     public void move(double x, double y) {
-        double curX = position.x();
+        double curX = getPosition().x();
 
-        // CR: use setter
-        position = new Position(x - size.width() / 2, y - size.height() / 2);
+        setPosition(new Position(x - getSize().width() / 2, y - getSize().height() / 2));
 
-        setDirection(position.x() < curX ? Direction.LEFT : Direction.RIGHT);
+        setDirection(getPosition().x() < curX ? Direction.LEFT : Direction.RIGHT);
     }
 }

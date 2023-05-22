@@ -7,9 +7,9 @@ import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Position;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Size;
 
 public abstract class GameObjectModel {
-    protected @NotNull Position position = new Position(0,0);
-    protected @NotNull Size size;
-    protected @NotNull Direction direction;
+    private @NotNull Position position = new Position(0,0);
+    private @NotNull Size size;
+    private @NotNull Direction direction;
 
     protected GameObjectModel(@NotNull Size size,@NotNull Direction direction) {
         this.direction = direction;

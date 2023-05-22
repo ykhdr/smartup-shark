@@ -21,22 +21,6 @@ public class ConfigParser {
         }
     }
 
-//    public static void main(String[] args) {
-//        Gson gson = new Gson();
-//
-//        try (FileReader reader = new FileReader("config.json")) {
-//            // Чтение и парсинг JSON-файла в экземпляр класса Config
-//            GameConfig config = gson.fromJson(reader, GameConfig.class);
-//
-//            // Использование распарсенной конфигурации
-//            System.out.println("Field size: " + config.fieldSize());
-//            System.out.println("Player position: " + config.player().position());
-//            System.out.println("Enemies count: " + config.enemies().size());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     public static @NotNull ConfigParser getInstance(){
         return instance;
     }

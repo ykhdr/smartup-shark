@@ -4,19 +4,17 @@ import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishObject;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.GameObjects;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.FishType;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Size;
 import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.PlayerModel;
 import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.attributes.GameField;
-import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.fishes.FishFactory;
-import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.fishes.FishModel;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.fishes.*;
 import ru.nsu.fit.ykhdr.smartupshark.model.gameutils.FishPositionGenerator;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameutils.ModelConverter;
 import ru.nsu.fit.ykhdr.smartupshark.model.gameutils.SpawnTimeManager;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-// CR: create subpackages
 public class GameModel {
 
     private final @NotNull List<FishModel> enemies;
@@ -108,13 +106,28 @@ public class GameModel {
     }
 
     public @NotNull GameObjects getGameObjects() {
-        // CR: just convert here
-        List<FishObject> fishObjectList = ModelConverter.convertFishListToObjectList(enemies);
-        PlayerObject playerObject = ModelConverter.convertPlayerToObject(player);
+        List<FishObject> fishObjectList = enemies.stream()
+                .map((model) -> new FishObject(matchFishType(model),
+                        model.getSize(),
+                        model.isEatable(),
+                        model.getPosition(),
+                        model.getDirection()))
+                .toList();
+
+        PlayerObject playerObject = new PlayerObject(player.getSize(), player.getPosition(), player.getDirection());
 
         return new GameObjects(fishObjectList, playerObject, score);
     }
 
+    private @NotNull FishType matchFishType(@NotNull FishModel fish) {
+        return switch (fish) {
+            case FatFishModel ignored -> FishType.FAT;
+            case JellyfishModel ignored -> FishType.JELLY;
+            case LongFishModel ignored -> FishType.LONG;
+            case MidFishModel ignored -> FishType.MID;
+            case SmallFishModel ignored -> FishType.SMALL;
+        };
+    }
 
     public int getScore() {
         return score;
