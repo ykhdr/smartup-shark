@@ -17,5 +17,10 @@
       "direction": "LEFT"
     },
     "score": 0
+  },
+  "spawn": {
+    "timeStep": 0.016,
+    "spawnDelay": 1,
+    "delayReduction": 0.05
   }
 }

@@ -7,7 +7,7 @@ import java.io.FileReader;
 import java.io.IOException;
 
 public class ConfigParser {
-    private static final @NotNull ConfigParser instance = new ConfigParser();
+    private static final @NotNull ConfigParser INSTANCE = new ConfigParser();
 
     private ConfigParser() {}
 
@@ -22,6 +22,6 @@ public class ConfigParser {
     }
 
     public static @NotNull ConfigParser getInstance(){
-        return instance;
+        return INSTANCE;
     }
 }

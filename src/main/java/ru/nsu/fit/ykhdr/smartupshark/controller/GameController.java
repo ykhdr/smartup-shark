@@ -4,7 +4,6 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.config.GameConfig;
 import ru.nsu.fit.ykhdr.smartupshark.config.ConfigParser;
 import ru.nsu.fit.ykhdr.smartupshark.model.GameModel;
 import ru.nsu.fit.ykhdr.smartupshark.model.utils.ScoreFileHandler;
@@ -28,17 +27,13 @@ public class GameController implements Controller {
         this.scene = new Scene(view);
         this.timer = createTimer();
 
-        ConfigParser configParser = ConfigParser.getInstance();
-        GameConfig config = configParser.parse(DEFAULT_CONFIG_PATH);
-
-        this.model = new GameModel(config.fieldSize(),config.gameObjects());
+        this.model = new GameModel(ConfigParser.getInstance().parse(DEFAULT_CONFIG_PATH));
     }
 
     private void setupViewDependencies() {
         view.setActionOnBtnStart(event -> startGame());
         view.setActionOnBtnNewGame(event -> newGame());
         view.setActionOnBtnBackToMenu(event -> sceneManager.setMenuScene());
-
         scene.setOnMouseMoved((MouseEvent event) -> model.movePlayer(event.getX(), event.getY()));
     }
 

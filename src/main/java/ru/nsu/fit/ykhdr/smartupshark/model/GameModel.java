@@ -1,6 +1,7 @@
 package ru.nsu.fit.ykhdr.smartupshark.model;
 
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.config.GameConfig;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishObject;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.GameObjects;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
@@ -16,24 +17,23 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameModel {
-
     private final @NotNull List<FishModel> enemies;
     private final @NotNull PlayerModel player;
     private final @NotNull GameField gameField;
 
-    private final @NotNull SpawnTimeManager timeManager = new SpawnTimeManager();
+    private final @NotNull SpawnTimeManager timeManager;
     private int score;
     private boolean gameOver = false;
 
-    public GameModel(@NotNull Size fieldSize, @NotNull GameObjects gameObjects) {
-        this.gameField = new GameField(fieldSize.width(), fieldSize.height());
+    public GameModel(@NotNull GameConfig config) {
+        this.gameField = new GameField(config.fieldSize().width(), config.fieldSize().height());
 
-        PlayerObject playerObject = gameObjects.player();
+        PlayerObject playerObject = config.gameObjects().player();
 
         this.player = new PlayerModel(playerObject.size(), playerObject.direction());
         player.setPosition(playerObject.position());
 
-        this.enemies = gameObjects.enemies().stream()
+        this.enemies = config.gameObjects().enemies().stream()
                 .map(fishObject -> {
                     FishModel fishModel = FishFactory.FISH_FACTORIES.get(fishObject.type()).getFish(fishObject.size(), fishObject.direction());
                     fishModel.setEatable(fishObject.isEatable());
@@ -42,7 +42,8 @@ public class GameModel {
                 })
                 .collect(Collectors.toList());
 
-        this.score = gameObjects.score();
+        this.score = config.gameObjects().score();
+        this.timeManager = new SpawnTimeManager(config.spawn());
     }
 
     public void movePlayer(double mouseX, double mouseY) {
@@ -51,7 +52,6 @@ public class GameModel {
 
     public void update() {
         enemies.forEach(FishModel::move);
-
         timeManager.increaseTime();
 
         enemies.removeIf(this::checkEnemyCollisionPlayer);

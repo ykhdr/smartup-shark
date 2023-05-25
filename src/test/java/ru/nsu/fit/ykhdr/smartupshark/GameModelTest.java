@@ -17,8 +17,7 @@ import java.util.List;
 
 /*
 протестировать:
- spawn time mananger - добавить в конфигурацию
-
+ spawn config - delay and time step,
 
  */
 public class GameModelTest {
@@ -149,6 +148,4 @@ public class GameModelTest {
         TestCase.assertEquals(playerObject.size().width() + 1, player.size().width());
         TestCase.assertEquals(playerObject.size().height() + 1, player.size().height());
     }
-
-
 }

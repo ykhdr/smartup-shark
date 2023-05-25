@@ -12,7 +12,7 @@ class SinusoidalLogicData {
         Random random = new Random();
 
         phase = random.nextDouble(1);
-        speed = random.nextDouble(1, 2);
+        speed = random.nextDouble(1, 1.5);
         amplitude = random.nextDouble(0.8);
         frequency = random.nextDouble(0.4, 0.5);
     }

@@ -16,10 +16,9 @@ import java.util.List;
 
 public class ScoreFileHandler {
 
-    // CR(minor): maybe not csv?
     private static final @NotNull Path CSV_PATH = Path.of("src/main/resources/data/scores.csv");
     private static final @NotNull ScoreFileHandler INSTANCE = new ScoreFileHandler();
-
+    private static final int SCORE_LIMIT = 20;
     private final List<ScoreData> scoreDataList;
     private int minScore = 0;
 
@@ -65,7 +64,7 @@ public class ScoreFileHandler {
 
         sortScoreDataList(allScoresList);
 
-        return allScoresList.subList(0, 20);
+        return allScoresList.subList(0, SCORE_LIMIT);
     }
 
     private void checkFileExist() {
@@ -75,7 +74,7 @@ public class ScoreFileHandler {
     }
 
     private void cacheNewScore(int score) {
-        if (scoreDataList.size() < 20 || score > minScore) {
+        if (scoreDataList.size() < SCORE_LIMIT || score > minScore) {
             ScoreData scoreData = createScoreDataFromScore(score);
             removeMinScore();
             scoreDataList.add(scoreData);
@@ -113,7 +112,7 @@ public class ScoreFileHandler {
 
     private void createFile() {
         try {
-            Files.createFile(ScoreFileHandler.CSV_PATH);
+            Files.createFile(CSV_PATH);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
