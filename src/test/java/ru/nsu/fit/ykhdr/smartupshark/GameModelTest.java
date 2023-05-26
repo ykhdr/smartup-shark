@@ -4,20 +4,15 @@ import junit.framework.TestCase;
 import org.junit.Test;
 import ru.nsu.fit.ykhdr.smartupshark.config.ConfigParser;
 import ru.nsu.fit.ykhdr.smartupshark.config.GameConfig;
+import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishObject;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.GameObjects;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Direction;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Position;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Size;
 import ru.nsu.fit.ykhdr.smartupshark.model.GameModel;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.attributes.GameField;
 
-// CR: think which invariants we have in program, move them to config file in order to test them
-
-/*
-протестировать:
- spawn config - delay and time step,
-
- */
 public class GameModelTest {
 
     @Test
@@ -63,19 +58,7 @@ public class GameModelTest {
     }
 
     @Test
-    public void enemyMovesOutsideGameFieldTest() {
-        String configPath = "src/test/resources/config/fish-on-edge-of-game-field.json";
-        GameConfig config = ConfigParser.getInstance().parse(configPath);
-
-        GameModel gameModel = new GameModel(config);
-
-        gameModel.update();
-
-        TestCase.assertTrue(gameModel.getGameObjects().enemies().isEmpty());
-    }
-
-    @Test
-    public void enemyMovesInsideGameFieldTest() {
+    public void fishMovesInsideGameFieldTest() {
         String configPath = "src/test/resources/config/fish-inside-game-field.json";
         GameConfig config = ConfigParser.getInstance().parse(configPath);
 
@@ -84,6 +67,18 @@ public class GameModelTest {
         gameModel.update();
 
         TestCase.assertFalse(gameModel.getGameObjects().enemies().isEmpty());
+    }
+
+    @Test
+    public void fishMovesOutsideGameFieldTest() {
+        String configPath = "src/test/resources/config/fish-on-edge-of-game-field.json";
+        GameConfig config = ConfigParser.getInstance().parse(configPath);
+
+        GameModel gameModel = new GameModel(config);
+
+        gameModel.update();
+
+        TestCase.assertTrue(gameModel.getGameObjects().enemies().isEmpty());
     }
 
     @Test
@@ -123,8 +118,46 @@ public class GameModelTest {
         PlayerObject player = gameObjects.player();
 
         TestCase.assertFalse(gameModel.isGameOver());
-        TestCase.assertEquals(config.gameObjects().score()+1, gameModel.getScore());
+        TestCase.assertEquals(config.gameObjects().score() + 1, gameModel.getScore());
         TestCase.assertEquals(config.gameObjects().player().size().width() + 1, player.size().width());
         TestCase.assertEquals(config.gameObjects().player().size().height() + 1, player.size().height());
     }
+
+    @Test
+    public void fishSpawnTest() {
+        String configPath = "src/test/resources/config/zero-spawn-delay.json";
+        GameConfig config = ConfigParser.getInstance().parse(configPath);
+
+        GameModel gameModel = new GameModel(config);
+
+        gameModel.update();
+        GameObjects gameObjects = gameModel.getGameObjects();
+
+        TestCase.assertEquals(1, gameObjects.enemies().size());
+
+        FishObject fishObject = gameObjects.enemies().get(0);
+
+        TestCase.assertTrue(
+                fishObject.position().x() < config.fieldSize().width() + GameField.SPAWN_OFFSET ||
+                        fishObject.position().x() > -GameField.SPAWN_OFFSET ||
+                        fishObject.position().y() < config.fieldSize().height() + GameField.SPAWN_OFFSET ||
+                        fishObject.position().y() > -GameField.SPAWN_OFFSET);
+    }
+
+    @Test
+    public void longFishSpawnDelayTest() {
+        String configPath = "src/test/resources/config/long-spawn-delay.json";
+        GameConfig config = ConfigParser.getInstance().parse(configPath);
+
+        GameModel gameModel = new GameModel(config);
+
+        for (int i = 0; i < config.spawn().spawnDelay() - 1; i++) {
+            gameModel.update();
+        }
+
+        GameObjects gameObjects = gameModel.getGameObjects();
+
+        TestCase.assertEquals(0, gameObjects.enemies().size());
+    }
+
 }

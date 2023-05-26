@@ -19,14 +19,14 @@ public class FishPositionGenerator {
     }
 
     private static void setRandomHorizontalCoordinates(@NotNull FishModel fish, @NotNull GameField fieldSize) {
-        double x = fish.getDirection() == Direction.RIGHT ? -50 : fieldSize.width() + 50;
-        double y = RANDOM.nextDouble(fieldSize.height() - 80) + 80;
+        double x = fish.getDirection() == Direction.RIGHT ? -GameField.SPAWN_OFFSET : fieldSize.width() + GameField.SPAWN_OFFSET;
+        double y = RANDOM.nextDouble(fieldSize.height() - GameField.SPAWN_OFFSET) + GameField.SPAWN_OFFSET;
         fish.setPosition(new Position(x, y));
     }
 
     private static void setRandomVerticalCoordinates(@NotNull FishModel fish, @NotNull GameField fieldSize) {
-        double x = RANDOM.nextDouble(fieldSize.width() - 80) + 80;
-        double y = fish.getDirection() == Direction.UP ? -50 : fieldSize.height() + 50;
+        double x = RANDOM.nextDouble(fieldSize.width() - GameField.SPAWN_OFFSET) + GameField.SPAWN_OFFSET;
+        double y = fish.getDirection() == Direction.UP ? -GameField.SPAWN_OFFSET : fieldSize.height() + GameField.SPAWN_OFFSET;
         fish.setPosition(new Position(x, y));
     }
 }

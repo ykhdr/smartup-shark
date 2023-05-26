@@ -5,7 +5,7 @@ import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Position;
 import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.GameObjectModel;
 
 public record GameField(double width, double height) {
-    private static final int SPAWN_OFFSET = 50;
+    public static final int SPAWN_OFFSET = 50;
 
     public boolean checkOutOfBounds(@NotNull GameObjectModel object) {
         Position position = object.getPosition();
