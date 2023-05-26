@@ -1,0 +1,26 @@
+{
+  "fieldSize": {
+    "width": 1024.0,
+    "height": 720.0
+  },
+  "gameObjects": {
+    "enemies": [],
+    "player": {
+      "size": {
+        "width": 30.0,
+        "height": 25.0
+      },
+      "position": {
+        "x": 512.0,
+        "y": 360.0
+      },
+      "direction": "LEFT"
+    },
+    "score": 0
+  },
+  "spawn": {
+    "timeStep": 0.016,
+    "spawnDelay": 1,
+    "delayReduction": 0.05
+  }
+}

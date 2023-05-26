@@ -2,16 +2,14 @@ package ru.nsu.fit.ykhdr.smartupshark;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import ru.nsu.fit.ykhdr.smartupshark.gameobjects.FishObject;
+import ru.nsu.fit.ykhdr.smartupshark.config.ConfigParser;
+import ru.nsu.fit.ykhdr.smartupshark.config.GameConfig;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.GameObjects;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Direction;
-import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.FishType;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Position;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Size;
 import ru.nsu.fit.ykhdr.smartupshark.model.GameModel;
-
-import java.util.List;
 
 // CR: think which invariants we have in program, move them to config file in order to test them
 
@@ -24,41 +22,16 @@ public class GameModelTest {
 
     @Test
     public void playerDoesNotMoveTest() {
-        double playerPositionX = 512;
-        double playerPositionY = 360;
+        String configPath = "src/test/resources/config/only-player.json";
+        GameConfig config = ConfigParser.getInstance().parse(configPath);
 
-        GameObjects configGameObjects = new GameObjects(List.of(),
-                new PlayerObject(new Size(30, 20), new Position(512, 360), Direction.LEFT),
-                0);
+        GameModel gameModel = new GameModel(config);
 
-        Size fieldSize = new Size(1024, 720);
-        GameModel gameModel = new GameModel(fieldSize, configGameObjects);
+        double playerWidth = config.gameObjects().player().size().width();
+        double playerHeight = config.gameObjects().player().size().height();
 
-        double playerWidth = 30;
-        double playerHeight = 20;
-
-        gameModel.movePlayer(playerPositionX, playerPositionY);
-
-        PlayerObject player = gameModel.getGameObjects().player();
-
-        TestCase.assertEquals(playerPositionX - playerWidth / 2, player.position().x());
-        TestCase.assertEquals(playerPositionY - playerHeight / 2, player.position().y());
-    }
-
-    @Test
-    public void playerMovesTest() {
-        GameObjects configGameObjects = new GameObjects(List.of(),
-                new PlayerObject(new Size(30, 20), new Position(512, 360), Direction.LEFT),
-                0);
-
-        Size fieldSize = new Size(1024, 720);
-        GameModel gameModel = new GameModel(fieldSize, configGameObjects);
-
-        double mouseX = 205;
-        double mouseY = 105;
-
-        double playerWidth = 30;
-        double playerHeight = 20;
+        double mouseX = 512;
+        double mouseY = 360;
 
         gameModel.movePlayer(mouseX, mouseY);
 
@@ -66,19 +39,35 @@ public class GameModelTest {
 
         TestCase.assertEquals(mouseX - playerWidth / 2, player.position().x());
         TestCase.assertEquals(mouseY - playerHeight / 2, player.position().y());
+    }
+
+    @Test
+    public void playerMovesTest() {
+        String configPath = "src/test/resources/config/only-player.json";
+        GameConfig config = ConfigParser.getInstance().parse(configPath);
+
+        GameModel gameModel = new GameModel(config);
+
+        double mouseX = 205;
+        double mouseY = 105;
+
+        Size playerSize = config.gameObjects().player().size();
+
+        gameModel.movePlayer(mouseX, mouseY);
+
+        PlayerObject player = gameModel.getGameObjects().player();
+
+        TestCase.assertEquals(mouseX - playerSize.width() / 2, player.position().x());
+        TestCase.assertEquals(mouseY - playerSize.height() / 2, player.position().y());
         TestCase.assertEquals(Direction.LEFT, player.direction());
     }
 
     @Test
     public void enemyMovesOutsideGameFieldTest() {
-        FishObject fishObject = new FishObject(FishType.FAT, new Size(30, 20), false, new Position(-49, 0), Direction.LEFT);
+        String configPath = "src/test/resources/config/fish-on-edge-of-game-field.json";
+        GameConfig config = ConfigParser.getInstance().parse(configPath);
 
-        GameObjects configGameObjects = new GameObjects(List.of(fishObject),
-                new PlayerObject(new Size(30, 20), new Position(512, 360), Direction.LEFT),
-                0);
-
-        Size fieldSize = new Size(1024, 720);
-        GameModel gameModel = new GameModel(fieldSize, configGameObjects);
+        GameModel gameModel = new GameModel(config);
 
         gameModel.update();
 
@@ -87,14 +76,10 @@ public class GameModelTest {
 
     @Test
     public void enemyMovesInsideGameFieldTest() {
-        FishObject fishObject = new FishObject(FishType.MID, new Size(35, 25), false, new Position(10, 10), Direction.LEFT);
+        String configPath = "src/test/resources/config/fish-inside-game-field.json";
+        GameConfig config = ConfigParser.getInstance().parse(configPath);
 
-        GameObjects configGameObjects = new GameObjects(List.of(fishObject),
-                new PlayerObject(new Size(30, 20), new Position(512, 360), Direction.LEFT),
-                0);
-
-        Size fieldSize = new Size(1024, 720);
-        GameModel gameModel = new GameModel(fieldSize, configGameObjects);
+        GameModel gameModel = new GameModel(config);
 
         gameModel.update();
 
@@ -103,49 +88,43 @@ public class GameModelTest {
 
     @Test
     public void playerEatsNonEatableFishTest() {
-        FishObject fishObject = new FishObject(FishType.FAT, new Size(30, 20), false, new Position(1024, 720), Direction.LEFT);
+        String configPath = "src/test/resources/config/player-with-non-eatable-fish.json";
+        GameConfig config = ConfigParser.getInstance().parse(configPath);
 
-        PlayerObject playerObject = new PlayerObject(new Size(30, 20), new Position(512, 360), Direction.LEFT);
-        GameObjects configGameObjects = new GameObjects(List.of(fishObject),
-                playerObject,
-                0);
+        GameModel gameModel = new GameModel(config);
 
-        Size fieldSize = new Size(1024, 720);
-        GameModel gameModel = new GameModel(fieldSize, configGameObjects);
+        Position fishPosition = config.gameObjects().enemies().get(0).position();
 
-        gameModel.movePlayer(1024, 720);
+        gameModel.movePlayer(fishPosition.x(), fishPosition.y());
         gameModel.update();
 
         GameObjects gameObjects = gameModel.getGameObjects();
         PlayerObject player = gameObjects.player();
 
         TestCase.assertTrue(gameModel.isGameOver());
-        TestCase.assertEquals(0, gameModel.getScore());
-        TestCase.assertEquals(playerObject.size().width(), player.size().width());
-        TestCase.assertEquals(playerObject.size().height(), player.size().height());
+        TestCase.assertEquals(config.gameObjects().score(), gameModel.getScore());
+        TestCase.assertEquals(config.gameObjects().player().size().width(), player.size().width());
+        TestCase.assertEquals(config.gameObjects().player().size().height(), player.size().height());
     }
 
     @Test
     public void playerEatsEatableFishTest() {
-        PlayerObject playerObject = new PlayerObject(new Size(30, 20), new Position(512, 360), Direction.LEFT);
+        String configPath = "src/test/resources/config/player-with-eatable-fish.json";
+        GameConfig config = ConfigParser.getInstance().parse(configPath);
 
-        FishObject fish = new FishObject(FishType.SMALL, new Size(20, 15), true, new Position(1024, 720), Direction.LEFT);
-        GameObjects configGameObjects = new GameObjects(List.of(fish),
-                playerObject,
-                0);
+        GameModel gameModel = new GameModel(config);
 
-        Size fieldSize = new Size(1024, 720);
-        GameModel gameModel = new GameModel(fieldSize, configGameObjects);
+        Position fishPosition = config.gameObjects().enemies().get(0).position();
 
-        gameModel.movePlayer(1024, 720);
+        gameModel.movePlayer(fishPosition.x(), fishPosition.y());
         gameModel.update();
 
         GameObjects gameObjects = gameModel.getGameObjects();
         PlayerObject player = gameObjects.player();
 
         TestCase.assertFalse(gameModel.isGameOver());
-        TestCase.assertEquals(1, gameModel.getScore());
-        TestCase.assertEquals(playerObject.size().width() + 1, player.size().width());
-        TestCase.assertEquals(playerObject.size().height() + 1, player.size().height());
+        TestCase.assertEquals(config.gameObjects().score()+1, gameModel.getScore());
+        TestCase.assertEquals(config.gameObjects().player().size().width() + 1, player.size().width());
+        TestCase.assertEquals(config.gameObjects().player().size().height() + 1, player.size().height());
     }
 }
