@@ -21,12 +21,12 @@ public class FishPositionGenerator {
     private static void setRandomHorizontalCoordinates(@NotNull FishModel fish, @NotNull GameField fieldSize) {
         double x = fish.getDirection() == Direction.RIGHT ? -50 : fieldSize.width() + 50;
         double y = RANDOM.nextDouble(fieldSize.height() - 80) + 80;
-        fish.setPosition(new Position(x,y));
+        fish.setPosition(new Position(x, y));
     }
 
     private static void setRandomVerticalCoordinates(@NotNull FishModel fish, @NotNull GameField fieldSize) {
         double x = RANDOM.nextDouble(fieldSize.width() - 80) + 80;
-        double y = fish.getDirection() == Direction.DOWN ? -50 : fieldSize.height() + 50;
-        fish.setPosition(new Position(x,y));
+        double y = fish.getDirection() == Direction.UP ? -50 : fieldSize.height() + 50;
+        fish.setPosition(new Position(x, y));
     }
 }

@@ -6,6 +6,7 @@ import ru.nsu.fit.ykhdr.smartupshark.config.SpawnConfig;
 public class SpawnTimeManager {
     private final double timeStep;
     private final double delayReduction;
+    private final double defaultSpawnDelay;
     private double spawnTime = 0;
     private double spawnDelayIncreaseTime = 0;
     private double spawnDelay;
@@ -14,6 +15,7 @@ public class SpawnTimeManager {
         this.timeStep = config.timeStep();
         this.delayReduction = config.delayReduction();
         this.spawnDelay = config.spawnDelay();
+        this.defaultSpawnDelay = config.spawnDelay();
     }
 
     public void increaseTime() {
@@ -38,9 +40,9 @@ public class SpawnTimeManager {
         spawnTime = 0;
     }
 
-    public void resetAll(){
+    public void resetAll() {
         spawnTime = 0;
-        spawnDelay = 1;
+        spawnDelay = defaultSpawnDelay;
         spawnDelayIncreaseTime = 0;
     }
 
