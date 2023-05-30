@@ -14,12 +14,21 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+
+/*
+
+20.02.2022,12
+20.02.2022,10
+20.02.2023,1
+
+ */
 public class ScoreFileHandler {
 
     private static final @NotNull Path CSV_PATH = Path.of("src/main/resources/data/scores.csv");
     private static final @NotNull ScoreFileHandler INSTANCE = new ScoreFileHandler();
     private static final int SCORE_LIMIT = 20;
     private final List<ScoreData> scoreDataList;
+    // CR: without score
     private int minScore = 0;
 
     private ScoreFileHandler() {
@@ -34,6 +43,7 @@ public class ScoreFileHandler {
         return scoreDataList;
     }
 
+    // CR: write all scores at the end
     public void writeScore(int score) {
         cacheNewScore(score);
         checkFileExist();
@@ -51,6 +61,7 @@ public class ScoreFileHandler {
         checkFileExist();
         List<ScoreData> allScoresList = new ArrayList<>();
 
+        // CR: nio
         try (Reader in = new BufferedReader(new FileReader(CSV_PATH.toString()))) {
             Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
 

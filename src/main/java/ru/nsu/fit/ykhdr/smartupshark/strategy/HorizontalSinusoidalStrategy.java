@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Direction;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Position;
 
+// CR: move to model
 public class HorizontalSinusoidalStrategy implements Strategy {
 
     private final @NotNull SinusoidalLogicData logicData = new SinusoidalLogicData();

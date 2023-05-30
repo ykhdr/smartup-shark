@@ -28,7 +28,7 @@ public class SpawnTimeManager {
         spawnDelayIncreaseTime = 0;
     }
 
-    public boolean isSpawnEnemyNecessary() {
+    public boolean isTimeToSpawn() {
         return spawnTime > spawnDelay;
     }
 

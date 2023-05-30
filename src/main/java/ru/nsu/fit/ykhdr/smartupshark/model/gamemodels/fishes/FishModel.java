@@ -9,6 +9,7 @@ import ru.nsu.fit.ykhdr.smartupshark.strategy.Strategy;
 
 import java.util.List;
 
+// CR: maybe just "Fish"? same for the rest model classes
 public sealed abstract class FishModel extends GameObjectModel permits FatFishModel, JellyfishModel, LongFishModel, MidFishModel, SmallFishModel {
     private boolean isEatable;
     private final @NotNull Strategy strategy;
@@ -39,6 +40,7 @@ public sealed abstract class FishModel extends GameObjectModel permits FatFishMo
 
     public static @NotNull Size getDefaultSize(@NotNull FishType type) {
         return switch (type) {
+            // CR: move to config
             case FAT -> new Size(40, 40);
             case SMALL -> new Size(20, 10);
             case JELLY -> new Size(25,40);

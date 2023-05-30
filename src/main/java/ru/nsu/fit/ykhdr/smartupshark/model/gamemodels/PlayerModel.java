@@ -25,6 +25,7 @@ public class PlayerModel extends GameObjectModel {
     }
 
     public void move(double x, double y) {
+        // CR: add assert
         double curX = getPosition().x();
 
         setPosition(new Position(x - getSize().width() / 2, y - getSize().height() / 2));

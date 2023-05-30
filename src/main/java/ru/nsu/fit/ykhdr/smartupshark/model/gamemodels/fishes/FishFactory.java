@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+// CR: regular class, init with fishes sizes
 @FunctionalInterface
 public interface FishFactory {
     @NotNull Map<FishType, FishFactory> FISH_FACTORIES = Map.of(

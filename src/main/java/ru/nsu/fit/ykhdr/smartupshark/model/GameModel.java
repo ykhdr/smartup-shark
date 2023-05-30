@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameModel {
+
     private final @NotNull List<FishModel> enemies;
     private final @NotNull PlayerModel player;
     private final @NotNull GameField gameField;
@@ -31,12 +32,14 @@ public class GameModel {
         PlayerObject playerObject = config.gameObjects().player();
 
         this.player = new PlayerModel(playerObject.size(), playerObject.direction());
-        player.setPosition(playerObject.position());
+        this.player.setPosition(playerObject.position());
 
         this.enemies = config.gameObjects().enemies().stream()
                 .map(fishObject -> {
+                    // CR: better add method to fish factory to create fish
                     FishModel fishModel = FishFactory.FISH_FACTORIES.get(fishObject.type()).getFish(fishObject.size(), fishObject.direction());
                     fishModel.setEatable(fishObject.isEatable());
+                    // CR: pass position in ctor?
                     fishModel.setPosition(fishObject.position());
                     return fishModel;
                 })
@@ -54,12 +57,14 @@ public class GameModel {
         enemies.forEach(FishModel::move);
         timeManager.increaseTime();
 
+        // CR: merge removeIf
         enemies.removeIf(this::checkEnemyCollisionPlayer);
         enemies.removeIf(this::checkEnemyOutOfBounds);
         enemies.forEach(this::setEnemyEatable);
 
-        if (timeManager.isSpawnEnemyNecessary()) {
+        if (timeManager.isTimeToSpawn()) {
             FishModel newEnemy = FishFactory.generate();
+            // CR: maybe do it inside FishFactory?
             FishPositionGenerator.setRandomCoordinates(newEnemy, gameField);
 
             enemies.add(newEnemy);
@@ -79,6 +84,7 @@ public class GameModel {
                 return true;
             }
             gameOver = true;
+            // CR: add break
         }
 
         return false;
@@ -99,6 +105,7 @@ public class GameModel {
     public void reset() {
         enemies.clear();
         gameOver = false;
+        // CR: use the same that was passed to ctor
         player.setSize(new Size(30, 20));
 
         timeManager.resetAll();

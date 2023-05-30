@@ -14,6 +14,7 @@ public class SceneManager {
 
     private static @Nullable SceneManager sceneManager;
 
+    // CR: use ctor instead
     public static @NotNull SceneManager getInstance(@NotNull Stage stage) {
         if (sceneManager == null) {
             sceneManager = new SceneManager(stage);

@@ -13,10 +13,19 @@ import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Size;
 import ru.nsu.fit.ykhdr.smartupshark.model.GameModel;
 import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.attributes.GameField;
 
+
+/*
+CR:
+- move player +-
+- player does not grow in size at some point -
+- enemy collides with enemy -
+
+ */
 public class GameModelTest {
 
     @Test
     public void playerDoesNotMoveTest() {
+        // CR: create config in code
         String configPath = "src/test/resources/config/only-player.json";
         GameConfig config = ConfigParser.getInstance().parse(configPath);
 
@@ -54,6 +63,7 @@ public class GameModelTest {
 
         TestCase.assertEquals(mouseX - playerSize.width() / 2, player.position().x());
         TestCase.assertEquals(mouseY - playerSize.height() / 2, player.position().y());
+        // CR: check other directions
         TestCase.assertEquals(Direction.LEFT, player.direction());
     }
 
@@ -102,6 +112,10 @@ public class GameModelTest {
         TestCase.assertEquals(config.gameObjects().player().size().height(), player.size().height());
     }
 
+//    private static void testWithModel(Consumer<GameModel> testBody) {
+//
+//    }
+
     @Test
     public void playerEatsEatableFishTest() {
         String configPath = "src/test/resources/config/player-with-eatable-fish.json";
@@ -124,7 +138,7 @@ public class GameModelTest {
     }
 
     @Test
-    public void fishSpawnTest() {
+    public void immediateSpawnTest() {
         String configPath = "src/test/resources/config/zero-spawn-delay.json";
         GameConfig config = ConfigParser.getInstance().parse(configPath);
 
@@ -145,7 +159,7 @@ public class GameModelTest {
     }
 
     @Test
-    public void longFishSpawnDelayTest() {
+    public void nonZeroSpawnDelayTest() {
         String configPath = "src/test/resources/config/long-spawn-delay.json";
         GameConfig config = ConfigParser.getInstance().parse(configPath);
 
