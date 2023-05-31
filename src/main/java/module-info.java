@@ -11,7 +11,7 @@ module ru.nsu.fit.ykhdr.smartupshark {
     exports ru.nsu.fit.ykhdr.smartupshark.controller;
     exports ru.nsu.fit.ykhdr.smartupshark.model;
     exports ru.nsu.fit.ykhdr.smartupshark.gameobjects to com.google.gson;
-    exports ru.nsu.fit.ykhdr.smartupshark.strategy;
+    exports ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.strategy;
     exports ru.nsu.fit.ykhdr.smartupshark.model.utils;
     exports ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.attributes;
     exports ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes to com.google.gson;

@@ -1,4 +1,4 @@
-package ru.nsu.fit.ykhdr.smartupshark.strategy;
+package ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.strategy;
 
 import java.util.Random;
 

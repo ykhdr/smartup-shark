@@ -5,7 +5,10 @@ import org.apache.commons.csv.CSVRecord;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.score.ScoreData;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -48,7 +51,7 @@ public class ScoreFileHandler {
         cacheNewScore(score);
         checkFileExist();
 
-        try (FileWriter writer = new FileWriter(CSV_PATH.toString(), true)) {
+        try (BufferedWriter writer = Files.newBufferedWriter(CSV_PATH, StandardCharsets.UTF_8)) {
             DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
             LocalDateTime now = LocalDateTime.now();
             writer.write(dtf.format(now) + "," + score + "\n");
@@ -61,8 +64,7 @@ public class ScoreFileHandler {
         checkFileExist();
         List<ScoreData> allScoresList = new ArrayList<>();
 
-        // CR: nio
-        try (Reader in = new BufferedReader(new FileReader(CSV_PATH.toString()))) {
+        try (Reader in = Files.newBufferedReader(CSV_PATH)) {
             Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
 
             for (CSVRecord record : records) {

@@ -18,9 +18,34 @@
     },
     "score": 0
   },
-  "spawn": {
+  "spawnTime": {
     "timeStep": 0.016,
-    "spawnDelay": 1,
+    "spawnDelay": 1.0,
     "delayReduction": 0.05
-  }
+  },
+  "factory": {
+    "defaultFishSizes": {
+      "FAT": {
+        "width": 40.0,
+        "height": 40.0
+      },
+      "JELLY": {
+        "width": 25.0,
+        "height": 40.0
+      },
+      "LONG": {
+        "width": 60.0,
+        "height": 30.0
+      },
+      "MID": {
+        "width": 35.0,
+        "height": 25.0
+      },
+      "SMALL": {
+        "width": 20.0,
+        "height": 10.0
+      }
+    }
+  },
+  "spawnOffset": 50
 }

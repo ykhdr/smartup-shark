@@ -12,7 +12,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage){
-        SceneManager sceneManager = SceneManager.getInstance(stage);
+        SceneManager sceneManager = new SceneManager(stage);
         sceneManager.show();
     }
 }

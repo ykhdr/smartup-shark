@@ -1,10 +1,10 @@
-package ru.nsu.fit.ykhdr.smartupshark.strategy;
+package ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.strategy;
 
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Direction;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Position;
 
-public class VerticalSinusoidalStrategy implements Strategy {
+public class HorizontalSinusoidalStrategy implements Strategy {
 
     private final @NotNull SinusoidalLogicData logicData = new SinusoidalLogicData();
 
@@ -13,9 +13,8 @@ public class VerticalSinusoidalStrategy implements Strategy {
         double time = System.currentTimeMillis() / 1000.0;
         double offset = logicData.getAmplitude() * Math.sin(2 * Math.PI * logicData.getFrequency() * time + logicData.getPhase());
 
-
-        double x = coordinates.x() + logicData.getSpeed() * offset;
-        double y = direction == Direction.UP ? coordinates.y() + logicData.getSpeed() : coordinates.y() - logicData.getSpeed();
+        double x = direction == Direction.RIGHT ? coordinates.x() + logicData.getSpeed() : coordinates.x() - logicData.getSpeed();
+        double y = coordinates.y() + logicData.getSpeed() * offset;
 
         return new Position(x, y);
     }

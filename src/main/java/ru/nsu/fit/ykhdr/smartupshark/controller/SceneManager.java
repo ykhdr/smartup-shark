@@ -12,18 +12,7 @@ public class SceneManager {
     private @Nullable Controller aboutController;
     private @Nullable Controller scoreboardController;
 
-    private static @Nullable SceneManager sceneManager;
-
-    // CR: use ctor instead
-    public static @NotNull SceneManager getInstance(@NotNull Stage stage) {
-        if (sceneManager == null) {
-            sceneManager = new SceneManager(stage);
-        }
-
-        return sceneManager;
-    }
-
-    private SceneManager(@NotNull Stage stage) {
+    public SceneManager(@NotNull Stage stage) {
         this.stage = stage;
     }
 

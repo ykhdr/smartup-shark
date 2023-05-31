@@ -1,7 +1,7 @@
 package ru.nsu.fit.ykhdr.smartupshark.model.gameutils;
 
 import org.jetbrains.annotations.NotNull;
-import ru.nsu.fit.ykhdr.smartupshark.config.SpawnConfig;
+import ru.nsu.fit.ykhdr.smartupshark.config.SpawnTimeConfig;
 
 public class SpawnTimeManager {
     private final double timeStep;
@@ -11,7 +11,7 @@ public class SpawnTimeManager {
     private double spawnDelayIncreaseTime = 0;
     private double spawnDelay;
 
-    public SpawnTimeManager(@NotNull SpawnConfig config) {
+    public SpawnTimeManager(@NotNull SpawnTimeConfig config) {
         this.timeStep = config.timeStep();
         this.delayReduction = config.delayReduction();
         this.spawnDelay = config.spawnDelay();

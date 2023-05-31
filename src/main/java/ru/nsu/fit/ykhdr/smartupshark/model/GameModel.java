@@ -7,46 +7,39 @@ import ru.nsu.fit.ykhdr.smartupshark.gameobjects.GameObjects;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.PlayerObject;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.FishType;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Size;
-import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.PlayerModel;
+import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.Player;
 import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.attributes.GameField;
 import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.fishes.*;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameutils.FishPositionGenerator;
 import ru.nsu.fit.ykhdr.smartupshark.model.gameutils.SpawnTimeManager;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class GameModel {
 
-    private final @NotNull List<FishModel> enemies;
-    private final @NotNull PlayerModel player;
     private final @NotNull GameField gameField;
+    private final @NotNull FishFactory fishFactory;
+    private final @NotNull Player player;
+    private final @NotNull List<Fish> enemies;
+    private final @NotNull Size defaultPlayerSize;
 
     private final @NotNull SpawnTimeManager timeManager;
     private int score;
     private boolean gameOver = false;
 
     public GameModel(@NotNull GameConfig config) {
-        this.gameField = new GameField(config.fieldSize().width(), config.fieldSize().height());
-
         PlayerObject playerObject = config.gameObjects().player();
 
-        this.player = new PlayerModel(playerObject.size(), playerObject.direction());
-        this.player.setPosition(playerObject.position());
-
+        this.gameField = new GameField(config.fieldSize().width(), config.fieldSize().height(), config.spawnOffset());
+        this.fishFactory = new FishFactory(config.factory());
+        this.player = new Player(playerObject.size(), playerObject.position(), playerObject.direction());
+        this.defaultPlayerSize = playerObject.size();
         this.enemies = config.gameObjects().enemies().stream()
-                .map(fishObject -> {
-                    // CR: better add method to fish factory to create fish
-                    FishModel fishModel = FishFactory.FISH_FACTORIES.get(fishObject.type()).getFish(fishObject.size(), fishObject.direction());
-                    fishModel.setEatable(fishObject.isEatable());
-                    // CR: pass position in ctor?
-                    fishModel.setPosition(fishObject.position());
-                    return fishModel;
-                })
+                .map(fishFactory::createFishFromObject)
                 .collect(Collectors.toList());
-
         this.score = config.gameObjects().score();
-        this.timeManager = new SpawnTimeManager(config.spawn());
+        this.timeManager = new SpawnTimeManager(config.spawnTime());
     }
 
     public void movePlayer(double mouseX, double mouseY) {
@@ -54,19 +47,20 @@ public class GameModel {
     }
 
     public void update() {
-        enemies.forEach(FishModel::move);
+        enemies.forEach(Fish::move);
         timeManager.increaseTime();
 
-        // CR: merge removeIf
-        enemies.removeIf(this::checkEnemyCollisionPlayer);
+        checkEnemiesCollisionPlayer();
+
+        if (gameOver) {
+            return;
+        }
+
         enemies.removeIf(this::checkEnemyOutOfBounds);
-        enemies.forEach(this::setEnemyEatable);
+        enemies.forEach(this::setEnemiesEatable);
 
         if (timeManager.isTimeToSpawn()) {
-            FishModel newEnemy = FishFactory.generate();
-            // CR: maybe do it inside FishFactory?
-            FishPositionGenerator.setRandomCoordinates(newEnemy, gameField);
-
+            Fish newEnemy = fishFactory.generate(gameField);
             enemies.add(newEnemy);
             timeManager.resetSpawnTime();
         }
@@ -76,28 +70,30 @@ public class GameModel {
         }
     }
 
-    private boolean checkEnemyCollisionPlayer(@NotNull FishModel enemy) {
-        if (player.checkInBoundsOf(enemy)) {
-            if (enemy.isEatable()) {
-                score += 1;
-                player.increaseSize();
-                return true;
+    private void checkEnemiesCollisionPlayer() {
+        Iterator<Fish> iterator = enemies.iterator();
+        while (iterator.hasNext()) {
+            Fish enemy = iterator.next();
+            if (player.checkInBoundsOf(enemy)) {
+                if (enemy.isEatable()) {
+                    score += 1;
+                    player.increaseSize();
+                    iterator.remove();
+                } else {
+                    gameOver = true;
+                    break;
+                }
             }
-            gameOver = true;
-            // CR: add break
         }
-
-        return false;
     }
 
-    private boolean checkEnemyOutOfBounds(@NotNull FishModel enemy) {
+    private boolean checkEnemyOutOfBounds(@NotNull Fish enemy) {
         return gameField.checkOutOfBounds(enemy);
     }
 
-    private void setEnemyEatable(@NotNull FishModel enemy) {
+    private void setEnemiesEatable(@NotNull Fish enemy) {
         double enemyArea = enemy.getSize().width() * enemy.getSize().height();
         double playerArea = player.getSize().width() * player.getSize().height();
-
 
         enemy.setEatable(enemyArea < playerArea);
     }
@@ -105,8 +101,7 @@ public class GameModel {
     public void reset() {
         enemies.clear();
         gameOver = false;
-        // CR: use the same that was passed to ctor
-        player.setSize(new Size(30, 20));
+        player.setSize(defaultPlayerSize);
 
         timeManager.resetAll();
         score = 0;
@@ -126,13 +121,13 @@ public class GameModel {
         return new GameObjects(fishObjectList, playerObject, score);
     }
 
-    private @NotNull FishType matchFishType(@NotNull FishModel fish) {
+    private @NotNull FishType matchFishType(@NotNull Fish fish) {
         return switch (fish) {
-            case FatFishModel ignored -> FishType.FAT;
-            case JellyfishModel ignored -> FishType.JELLY;
-            case LongFishModel ignored -> FishType.LONG;
-            case MidFishModel ignored -> FishType.MID;
-            case SmallFishModel ignored -> FishType.SMALL;
+            case FatFish ignored -> FishType.FAT;
+            case Jellyfish ignored -> FishType.JELLY;
+            case LongFish ignored -> FishType.LONG;
+            case MidFish ignored -> FishType.MID;
+            case SmallFish ignored -> FishType.SMALL;
         };
     }
 
