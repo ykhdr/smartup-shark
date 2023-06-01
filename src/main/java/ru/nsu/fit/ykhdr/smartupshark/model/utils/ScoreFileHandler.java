@@ -19,13 +19,6 @@ import java.util.Comparator;
 import java.util.List;
 
 
-/*
-
-20.02.2022,12
-20.02.2022,10
-20.02.2023,1
-
- */
 public class ScoreFileHandler {
 
     private static final @NotNull Path CSV_PATH = Path.of("src/main/resources/data/scores.csv");

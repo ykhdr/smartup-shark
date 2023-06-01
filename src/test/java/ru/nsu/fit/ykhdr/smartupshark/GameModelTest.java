@@ -96,6 +96,50 @@ public class GameModelTest {
     }
 
     @Test
+    public void playerTriesToMoveOutsideGameFieldTest() {
+        GameConfig config = new GameConfig(
+                new Size(1024, 720),
+                new GameObjects(
+                        List.of(),
+                        new PlayerObject(new Size(30, 20), new Position(10, 15), Direction.LEFT),
+                        0),
+                new SpawnTimeConfig(0.016, 1, 0.05),
+                new FactoryConfig(new HashMap<>()),
+                50
+        );
+
+        Consumer<GameModel> testBody = (gameModel) -> {
+            double fieldHeight = config.fieldSize().height();
+            double fieldWidth = config.fieldSize().width();
+            Position playerStartPosition = config.gameObjects().player().position();
+
+            for (int i = 0; i < 4; i++) {
+
+                double mouseX = switch (i) {
+                    case 0, 1 -> -10;
+                    case 2, 3 -> fieldWidth + 15;
+                    default -> 0;
+                };
+
+                double mouseY = switch (i) {
+                    case 0, 2 -> -10;
+                    case 1, 3 -> fieldHeight + 15;
+                    default -> 0;
+                };
+
+                gameModel.movePlayer(mouseX, mouseY);
+
+                PlayerObject player = gameModel.getGameObjects().player();
+
+                TestCase.assertEquals(playerStartPosition.x(), player.position().x());
+                TestCase.assertEquals(playerStartPosition.y(), player.position().y());
+            }
+        };
+
+        testWithModel(testBody, config);
+    }
+
+    @Test
     public void fishMovesInsideGameFieldTest() {
         GameConfig config = new GameConfig(
                 new Size(1024, 720),
