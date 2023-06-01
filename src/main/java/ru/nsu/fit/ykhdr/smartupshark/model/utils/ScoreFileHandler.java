@@ -5,12 +5,13 @@ import org.apache.commons.csv.CSVRecord;
 import org.jetbrains.annotations.NotNull;
 import ru.nsu.fit.ykhdr.smartupshark.score.ScoreData;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,14 +29,13 @@ import java.util.List;
 public class ScoreFileHandler {
 
     private static final @NotNull Path CSV_PATH = Path.of("src/main/resources/data/scores.csv");
+    private static final Comparator<ScoreData> COMPARATOR = Comparator.comparingInt(ScoreData::score);
     private static final @NotNull ScoreFileHandler INSTANCE = new ScoreFileHandler();
     private static final int SCORE_LIMIT = 20;
-    private final List<ScoreData> scoreDataList;
-    // CR: without score
-    private int minScore = 0;
+    private final List<ScoreData> scoreDataList = new ArrayList<>();
 
     private ScoreFileHandler() {
-        scoreDataList = loadScoreDataFromCsv();
+        loadScoreDataFromCsv();
     }
 
     public static @NotNull ScoreFileHandler getInstance() {
@@ -46,68 +46,55 @@ public class ScoreFileHandler {
         return scoreDataList;
     }
 
-    // CR: write all scores at the end
-    public void writeScore(int score) {
-        cacheNewScore(score);
-        checkFileExist();
+    private void loadScoreDataFromCsv() {
+        checkFileExists();
 
-        try (BufferedWriter writer = Files.newBufferedWriter(CSV_PATH, StandardCharsets.UTF_8)) {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-            LocalDateTime now = LocalDateTime.now();
-            writer.write(dtf.format(now) + "," + score + "\n");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private @NotNull List<ScoreData> loadScoreDataFromCsv() {
-        checkFileExist();
-        List<ScoreData> allScoresList = new ArrayList<>();
-
-        try (Reader in = Files.newBufferedReader(CSV_PATH)) {
+        try (BufferedReader in = Files.newBufferedReader(CSV_PATH, StandardCharsets.UTF_8)) {
             Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
 
             for (CSVRecord record : records) {
-                addRecordToScoreDataList(allScoresList, record);
+                addRecordToScoreDataList(record);
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        sortScoreDataList(allScoresList);
-
-        return allScoresList.subList(0, SCORE_LIMIT);
     }
 
-    private void checkFileExist() {
+    public void writeScoreToFile() {
+        try (BufferedWriter writer = Files.newBufferedWriter(CSV_PATH, StandardCharsets.UTF_8, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+            for (ScoreData scoreData : scoreDataList) {
+                writer.write(scoreData.date() + "," + scoreData.score() + "\n");
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void checkFileExists() {
         if (!Files.exists(CSV_PATH)) {
             createFile();
         }
     }
 
-    private void cacheNewScore(int score) {
-        if (scoreDataList.size() < SCORE_LIMIT || score > minScore) {
-            ScoreData scoreData = createScoreDataFromScore(score);
-            removeMinScore();
-            scoreDataList.add(scoreData);
-            sortScoreDataList(scoreDataList);
-            minScore = scoreDataList.stream().min(Comparator.comparingInt(ScoreData::score)).orElse(scoreData).score();
+    public void cacheNewScore(int score) {
+        if (scoreDataList.size() < SCORE_LIMIT) {
+            scoreDataList.add(createScoreDataFromScore(score));
+        } else if (score > scoreDataList.get(scoreDataList.size() - 1).score()) {
+            updateScoreDataList(createScoreDataFromScore(score));
         }
     }
 
-    private void removeMinScore() {
+    private void updateScoreDataList(@NotNull ScoreData newScoreData) {
         scoreDataList.stream()
-                .filter(scoreData -> scoreData.score() < minScore)
-                .findFirst()
+                .min(COMPARATOR)
                 .ifPresent(scoreDataList::remove);
+
+        scoreDataList.add(newScoreData);
+        scoreDataList.sort(COMPARATOR.reversed());
     }
 
-    private static void sortScoreDataList(@NotNull List<ScoreData> scoreList) {
-        scoreList.sort(Comparator.comparingInt(ScoreData::score).reversed());
-    }
-
-    private void addRecordToScoreDataList(@NotNull List<ScoreData> scoreDataList, @NotNull CSVRecord record) {
+    private void addRecordToScoreDataList(@NotNull CSVRecord record) {
         try {
             scoreDataList.add(createScoreDataFromRecord(record));
         } catch (NumberFormatException ignored) {
@@ -121,7 +108,6 @@ public class ScoreFileHandler {
     private @NotNull ScoreData createScoreDataFromScore(int score) {
         return new ScoreData(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")), score);
     }
-
 
     private void createFile() {
         try {

@@ -9,7 +9,6 @@ import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.FishType;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Position;
 import ru.nsu.fit.ykhdr.smartupshark.gameobjects.attributes.Size;
 import ru.nsu.fit.ykhdr.smartupshark.model.gamemodels.attributes.GameField;
-import ru.nsu.fit.ykhdr.smartupshark.model.gameutils.FishPositionGenerator;
 
 import java.util.List;
 import java.util.Map;

@@ -62,7 +62,7 @@ public class GameController implements Controller {
     private void endGame() {
         timer.stop();
         view.endGame(model.getScore());
-        scoreFileHandler.writeScore(model.getScore());
+        scoreFileHandler.cacheNewScore(model.getScore());
         model.reset();
     }
 

@@ -2,6 +2,7 @@ package ru.nsu.fit.ykhdr.smartupshark.controller;
 
 import javafx.scene.Scene;
 import org.jetbrains.annotations.NotNull;
+import ru.nsu.fit.ykhdr.smartupshark.model.utils.ScoreFileHandler;
 import ru.nsu.fit.ykhdr.smartupshark.view.MenuView;
 
 public class MenuController implements Controller {
@@ -24,7 +25,10 @@ public class MenuController implements Controller {
         view.setActionOnBtnNewGame(event -> sceneManager.setGameScene());
         view.setActionOnBtnScoreboard(event -> sceneManager.setScoreboardScene());
         view.setActionOnBtnAbout(event -> sceneManager.setAboutScene());
-        view.setActionOnBtnExit(event -> System.exit(0));
+        view.setActionOnBtnExit(event -> {
+            ScoreFileHandler.getInstance().writeScoreToFile();
+            System.exit(0);
+        });
     }
 
     @Override

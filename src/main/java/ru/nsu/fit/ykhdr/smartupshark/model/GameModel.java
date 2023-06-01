@@ -43,6 +43,10 @@ public class GameModel {
     }
 
     public void movePlayer(double mouseX, double mouseY) {
+        if (mouseX < 0 || mouseX > gameField.width() || mouseY < 0 || mouseY > gameField.height()) {
+            return;
+        }
+
         player.move(mouseX, mouseY);
     }
 
