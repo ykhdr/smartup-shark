@@ -40,6 +40,7 @@ public class ScoreFileHandler {
     }
 
     private void loadScoreDataFromCsv() {
+        // CR: implement the same logic as in writeScoreToFile
         checkFileExists();
 
         try (BufferedReader in = Files.newBufferedReader(CSV_PATH, StandardCharsets.UTF_8)) {
@@ -60,6 +61,7 @@ public class ScoreFileHandler {
                 writer.write(scoreData.date() + "," + scoreData.score() + "\n");
             }
         } catch (IOException e) {
+            // CR: log?
             throw new RuntimeException(e);
         }
     }
@@ -79,6 +81,7 @@ public class ScoreFileHandler {
     }
 
     private void updateScoreDataList(@NotNull ScoreData newScoreData) {
+        // CR(minor): can use tree set instead
         scoreDataList.stream()
                 .min(COMPARATOR)
                 .ifPresent(scoreDataList::remove);
@@ -91,14 +94,17 @@ public class ScoreFileHandler {
         try {
             scoreDataList.add(createScoreDataFromRecord(record));
         } catch (NumberFormatException ignored) {
+            // CR: log
         }
     }
 
     private @NotNull ScoreData createScoreDataFromRecord(@NotNull CSVRecord record) {
+        // CR: we can also get an npe here
         return new ScoreData(record.get(0), Integer.parseInt(record.get(1)));
     }
 
     private @NotNull ScoreData createScoreDataFromScore(int score) {
+        // CR: better to move DateTimeFormatter.ofPattern(...) to field and not recreate
         return new ScoreData(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss")), score);
     }
 

@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 
 
 public class GameModelTest {
+    // CR: turned out kinda useless :(
     private static void testWithModel(@NotNull Consumer<GameModel> testBody, @NotNull GameConfig config) {
         GameModel gameModel = new GameModel(config);
         testBody.accept(gameModel);

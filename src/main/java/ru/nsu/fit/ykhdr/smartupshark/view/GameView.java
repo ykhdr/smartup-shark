@@ -28,6 +28,7 @@ public class GameView extends StackPane implements View {
     private final @NotNull GameField gameField = new GameField();
     private final @NotNull StartBox startBox = new StartBox();
     private final @NotNull EndBox endBox = new EndBox();
+
     @Override
     public void setup() {
         gameField.setup();
